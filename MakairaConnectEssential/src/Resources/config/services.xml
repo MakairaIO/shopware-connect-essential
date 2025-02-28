@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <!-- Commands -->
+        <service id="MakairaConnectEssential\Command\UpdateCommand">
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Importer\CategoryImporter"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Importer\ProductManufacturerImporter"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Importer\ProductImporter"/>
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <tag name="console.command"/>
+        </service>
+        <service id="MakairaConnectEssential\Command\RebuildCommand">
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <tag name="console.command"/>
+        </service>
+        <service id="MakairaConnectEssential\Command\SwitchCommand">
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <tag name="console.command"/>
+        </service>
+
+        <!-- Importer -->
+        <service id="MakairaConnectEssential\PersistenceLayer\Importer\CategoryImporter">
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\CategoryNormalizer"/>
+        </service>
+        <service id="MakairaConnectEssential\PersistenceLayer\Importer\ProductManufacturerImporter">
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\ProductManufacturerLoader"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductManufacturerNormalizer"/>
+        </service>
+        <service id="MakairaConnectEssential\PersistenceLayer\Importer\ProductImporter">
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\ProductLoader"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer"/>
+        </service>
+
+        <!-- Loader -->
+        <service id="MakairaConnectEssential\Loader\CategoryLoader">
+            <argument type="service" id="sales_channel.category.repository"/>
+        </service>
+        <service id="MakairaConnectEssential\Loader\ProductManufacturerLoader">
+            <argument type="service" id="product_manufacturer.repository"/>
+        </service>
+        <service id="MakairaConnectEssential\Loader\ProductLoader">
+            <argument type="service" id="sales_channel.product.repository"/>
+        </service>
+        <service id="MakairaConnectEssential\Loader\SalesChannelLoader">
+            <argument type="service" id="sales_channel.repository"/>
+        </service>
+
+        <!-- Normalizer -->
+        <service id="MakairaConnectEssential\PersistenceLayer\Normalizer\CategoryNormalizer">
+            <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader"/>
+        </service>
+        <service id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductManufacturerNormalizer"/>
+        <service id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer"/>
+
+        <!-- Persistence Layer -->
+        <service id="MakairaConnectEssential\PersistenceLayer\Api\ApiClientFactory">
+            <argument type="service" id="http_client.uri_template"/>
+            <argument type="string">%kernel.shopware_version%</argument>
+        </service>
+        <service id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory">
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiClientFactory"/>
+            <argument type="service" id="clock"/>
+        </service>
+
+        <!-- Subscriber -->
+        <service id="MakairaConnectEssential\Subscriber\CategorySubscriber">
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Importer\CategoryImporter"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Utils -->
+        <service id="MakairaConnectEssential\Utils\PluginConfig" public="true">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+        </service>
+    </services>
+</container>

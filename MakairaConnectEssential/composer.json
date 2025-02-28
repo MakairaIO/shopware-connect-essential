@@ -1,0 +1,32 @@
+{
+    "name": "makaira/shopware6-connect-v2",
+    "description": "Makaira Connect Essential",
+    "type": "shopware-platform-plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "shopware/core": "~6.6.0"
+    },
+    "extra": {
+        "shopware-plugin-class": "MakairaConnectEssential\\MakairaConnectEssential",
+        "label": {
+            "de-DE": "Makaira Connect Essential",
+            "en-GB": "Makaira Connect Essential"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "MakairaConnectEssential\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MakairaConnectEssential\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true
+        }
+    }
+}
