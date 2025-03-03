@@ -62,9 +62,9 @@ class UpdateCommand extends Command
             try {
                 $makairaApiConfig = $this->pluginConfig->createMakairaApiConfig($salesChannelId);
 
-                $this->categoryImporter->upsert($salesChannelContext, $makairaApiConfig);
-                $this->productManufacturerImporter->upsert($salesChannelContext, $makairaApiConfig);
-                $this->productImporter->upsert($salesChannelContext, $makairaApiConfig);
+                $this->categoryImporter->upsert($salesChannelContext, $makairaApiConfig, [], $io);
+                $this->productManufacturerImporter->upsert($salesChannelContext, $makairaApiConfig, [], $io);
+                $this->productImporter->upsert($salesChannelContext, $makairaApiConfig, [], $io);
                 $io->success('Finished');
             } catch(\Exception $exception) {
                 $io->error($exception->getMessage());

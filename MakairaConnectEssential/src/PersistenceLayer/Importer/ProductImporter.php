@@ -13,6 +13,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\Context\AbstractSalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
@@ -29,7 +30,7 @@ class ProductImporter
     ) {
     }
 
-    public function upsert(SalesChannelContext $salesChannelContext, ApiConfig $apiConfig, array $productIds = []): void
+    public function upsert(SalesChannelContext $salesChannelContext, ApiConfig $apiConfig, array $productIds = [], ?SymfonyStyle $io = null): void
     {
         if (empty($productIds)) {
             $productIds = $this->productLoader->getAllIds($salesChannelContext);
@@ -39,15 +40,20 @@ class ProductImporter
         $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
+            $io?->block(sprintf('Products for language: %s', $language->getLocale()->getCode()));
+
             $salesChannelLanguageContext = $this->salesChannelContextFactory->create(Uuid::randomHex(), $salesChannelContext->getSalesChannelId(), [
                 SalesChannelContextService::LANGUAGE_ID => $language->getId(),
             ]);
 
             try {
+                $io?->progressStart(count($productIds));
                 foreach (array_chunk($productIds, 100) as $productChunk) {
                     $products = $this->productLoader->loadByIds($productChunk, $salesChannelLanguageContext);
                     $normalizedProducts = [];
+
                     foreach ($products as $product) {
+                        $io?->progressAdvance();
                         $normalizedProducts[] = [
                             'language' => substr($language->getLocale()->getCode(), 0, 2),
                             'data' => $this->productNormalizer->normalize($product, null, ['salesChannelContext' => $salesChannelLanguageContext]),
@@ -55,6 +61,7 @@ class ProductImporter
                     }
                     $apiGateway->insertPersistenceRevisions($normalizedProducts);
                 }
+                $io?->progressFinish();
             } catch (\Exception | HttpExceptionInterface | ExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 // TODO: Logging
                 var_dump($exception->getMessage());

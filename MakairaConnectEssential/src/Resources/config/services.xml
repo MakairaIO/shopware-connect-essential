@@ -62,7 +62,7 @@
         <service id="MakairaConnectEssential\Loader\ProductLoader">
             <argument type="service" id="sales_channel.product.repository"/>
         </service>
-        <service id="MakairaConnectEssential\Loader\SalesChannelLoader">
+        <service id="MakairaConnectEssential\Loader\SalesChannelLoader" public="true">
             <argument type="service" id="sales_channel.repository"/>
         </service>
 
@@ -89,6 +89,20 @@
             <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Importer\CategoryImporter"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+        <service id="MakairaConnectEssential\Subscriber\ProductSubscriber">
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Importer\ProductImporter"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+        <service id="MakairaConnectEssential\Subscriber\ProductManufacturerSubscriber">
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig"/>
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Importer\ProductManufacturerImporter"/>
             <tag name="kernel.event_subscriber"/>
         </service>
 

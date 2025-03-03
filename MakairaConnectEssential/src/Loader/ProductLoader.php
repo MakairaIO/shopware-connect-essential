@@ -37,6 +37,8 @@ class ProductLoader
         $criteria->addAssociation('tags');
         $criteria->addAssociation('manufacturer');
         $criteria->addAssociation('searchKeywords');
+        $criteria->addAssociation('productReviews');
+        $criteria->addAssociation('seoUrls');
 
         return $this->productRepository->search($criteria, $salesChannelContext);
     }

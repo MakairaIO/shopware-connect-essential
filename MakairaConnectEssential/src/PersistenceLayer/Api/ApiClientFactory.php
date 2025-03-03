@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace MakairaConnectEssential\PersistenceLayer\Api;
 
-use App\MakairaConnectEssential\src\PersistenceLayer\Api\ApiClient;
-use App\MakairaConnectEssential\src\MakairaConnectEssential;
+use MakairaConnectEssential\MakairaConnectEssential;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class ApiClientFactory

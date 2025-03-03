@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MakairaConnectEssential\PersistenceLayer\Api;
 
-use App\MakairaConnectEssential\src\PersistenceLayer\Api\ApiClient;
 use MakairaConnectEssential\PersistenceLayer\Api\Exception\ApiException;
 use Psr\Clock\ClockInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -122,14 +121,10 @@ final readonly class ApiGateway implements ApiGatewayInterface
      */
     public function rebuildPersistenceLayer(): void
     {
-        $response = $this->apiClient->request(
-            'POST',
-            '/persistence/revisions/rebuild',
-            [
-                'customer' => $this->customer,
-                'instance' => $this->instance,
-            ],
-        );
+        $response = $this->apiClient->request('POST', '/persistence/revisions/rebuild', [
+            'customer' => $this->customer,
+            'instance' => $this->instance,
+        ]);
 
         if ('success' !== ($response->toArray(false)['status'] ?? null)) {
             throw ApiException::fromResponse($response);
@@ -146,14 +141,10 @@ final readonly class ApiGateway implements ApiGatewayInterface
      */
     public function switchPersistenceLayer(): void
     {
-        $response = $this->apiClient->request(
-            'POST',
-            '/persistence/revisions/switch',
-            [
-                'customer' => $this->customer,
-                'instance' => $this->instance,
-            ],
-        );
+        $response = $this->apiClient->request('POST', '/persistence/revisions/switch', [
+            'customer' => $this->customer,
+            'instance' => $this->instance,
+        ]);
 
         if ('success' !== ($response->toArray(false)['status'] ?? null)) {
             throw ApiException::fromResponse($response);

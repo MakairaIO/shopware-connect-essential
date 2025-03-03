@@ -8,11 +8,12 @@ use MakairaConnectEssential\Loader\CategoryLoader;
 use MakairaConnectEssential\Loader\SalesChannelLoader;
 use MakairaConnectEssential\PersistenceLayer\Api\ApiConfig;
 use MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory;
-use App\MakairaConnectEssential\src\PersistenceLayer\Normalizer\CategoryNormalizer;
+use MakairaConnectEssential\PersistenceLayer\Normalizer\CategoryNormalizer;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\Context\AbstractSalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
@@ -29,7 +30,7 @@ class CategoryImporter
     ) {
     }
 
-    public function upsert(SalesChannelContext $salesChannelContext, ApiConfig $apiConfig, array $categoryIds = []): void
+    public function upsert(SalesChannelContext $salesChannelContext, ApiConfig $apiConfig, array $categoryIds = [], ?SymfonyStyle $io = null): void
     {
         if (empty($categoryIds)) {
             $categoryIds = $this->categoryLoader->getAllIds($salesChannelContext);
@@ -39,15 +40,20 @@ class CategoryImporter
         $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
+            $io?->block(sprintf('Category for language: %s', $language->getLocale()->getCode()));
+
             $salesChannelLanguageContext = $this->salesChannelContextFactory->create(Uuid::randomHex(), $salesChannelContext->getSalesChannelId(), [
                 SalesChannelContextService::LANGUAGE_ID => $language->getId(),
             ]);
 
             try {
+                $io?->progressStart(count($categoryIds));
                 foreach (array_chunk($categoryIds, 100) as $categoryChunk) {
                     $categories = $this->categoryLoader->loadByIds($categoryChunk, $salesChannelLanguageContext);
                     $normalizedCategories = [];
+
                     foreach ($categories as $category) {
+                        $io?->progressAdvance();
                         $normalizedCategories[] = [
                             'language' => substr($language->getLocale()->getCode(), 0, 2),
                             'data' => $this->categoryNormalizer->normalize($category, null, ['salesChannelContext' => $salesChannelLanguageContext]),
@@ -55,6 +61,7 @@ class CategoryImporter
                     }
                     $apiGateway->insertPersistenceRevisions($normalizedCategories);
                 }
+                $io?->progressFinish();
             } catch (\Exception | HttpExceptionInterface | ExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 // TODO: Logging
                 var_dump($exception->getMessage());

@@ -14,6 +14,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[AsCommand(
     name: 'makaira:persistence-layer:rebuild',
@@ -59,7 +64,7 @@ class RebuildCommand extends Command
                 $apiGateway = $this->apiGatewayFactory->create($apiConfig);
                 $apiGateway->rebuildPersistenceLayer();
                 $io->success('Finished');
-            } catch(\Exception $exception) {
+            } catch(\Exception | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $exception) {
                 $io->error($exception->getMessage());
             }
         }
