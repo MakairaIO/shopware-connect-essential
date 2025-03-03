@@ -48,6 +48,7 @@ class CategoryImporter
 
             try {
                 $io?->progressStart(count($categoryIds));
+                // TODO: add chunk size to plugin config
                 foreach (array_chunk($categoryIds, 100) as $categoryChunk) {
                     $categories = $this->categoryLoader->loadByIds($categoryChunk, $salesChannelLanguageContext);
                     $normalizedCategories = [];

@@ -48,6 +48,7 @@ class ProductImporter
 
             try {
                 $io?->progressStart(count($productIds));
+                // TODO: add chunk size to plugin config
                 foreach (array_chunk($productIds, 100) as $productChunk) {
                     $products = $this->productLoader->loadByIds($productChunk, $salesChannelLanguageContext);
                     $normalizedProducts = [];
