@@ -9,6 +9,7 @@ use MakairaConnectEssential\Loader\SalesChannelLoader;
 use MakairaConnectEssential\PersistenceLayer\Api\ApiConfig;
 use MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory;
 use MakairaConnectEssential\PersistenceLayer\Normalizer\ProductManufacturerNormalizer;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\Context\AbstractSalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
@@ -27,6 +28,7 @@ class ProductManufacturerImporter
         protected AbstractSalesChannelContextFactory $salesChannelContextFactory,
         protected ProductManufacturerLoader $productManufacturerLoader,
         protected ProductManufacturerNormalizer $productManufacturerNormalizer,
+        protected LoggerInterface $logger
     ) {
     }
 
@@ -63,8 +65,11 @@ class ProductManufacturerImporter
                 }
                 $io?->progressFinish();
             } catch (\Exception | HttpExceptionInterface | ExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
-                // TODO: Logging
-                var_dump($exception->getMessage());
+                $this->logger->error('Error during product manufacturer upsert', [
+                    'message' => $exception->getMessage(),
+                    'trace' => $exception->getTraceAsString(),
+                ]);
+                $io?->error('An error occurred. Check the logs for more details.');
             }
         }
     }
@@ -85,8 +90,10 @@ class ProductManufacturerImporter
                     $apiGateway->deletePersistenceRevisions($productManufacturerData, substr($language->getLocale()->getCode(), 0, 2));
                 }
             } catch (\Exception | HttpExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
-                // TODO: Logging
-                var_dump($exception->getMessage());
+                $this->logger->error('Error during product manufacturer deletion', [
+                    'message' => $exception->getMessage(),
+                    'trace' => $exception->getTraceAsString(),
+                ]);
             }
         }
     }

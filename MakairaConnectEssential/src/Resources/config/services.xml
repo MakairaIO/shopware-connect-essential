@@ -36,6 +36,7 @@
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
             <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader"/>
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\CategoryNormalizer"/>
+            <argument type="service" id="logger"/>
         </service>
         <service id="MakairaConnectEssential\PersistenceLayer\Importer\ProductManufacturerImporter">
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory"/>
@@ -43,6 +44,7 @@
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
             <argument type="service" id="MakairaConnectEssential\Loader\ProductManufacturerLoader"/>
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductManufacturerNormalizer"/>
+            <argument type="service" id="logger"/>
         </service>
         <service id="MakairaConnectEssential\PersistenceLayer\Importer\ProductImporter">
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory"/>
@@ -50,6 +52,7 @@
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory"/>
             <argument type="service" id="MakairaConnectEssential\Loader\ProductLoader"/>
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer"/>
+            <argument type="service" id="logger"/>
         </service>
 
         <!-- Loader -->

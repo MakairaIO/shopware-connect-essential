@@ -9,6 +9,7 @@ use MakairaConnectEssential\Loader\SalesChannelLoader;
 use MakairaConnectEssential\PersistenceLayer\Api\ApiConfig;
 use MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory;
 use MakairaConnectEssential\PersistenceLayer\Normalizer\CategoryNormalizer;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\Context\AbstractSalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextService;
@@ -27,6 +28,7 @@ class CategoryImporter
         protected AbstractSalesChannelContextFactory $salesChannelContextFactory,
         protected CategoryLoader $categoryLoader,
         protected CategoryNormalizer $categoryNormalizer,
+        protected LoggerInterface $logger
     ) {
     }
 
@@ -64,8 +66,11 @@ class CategoryImporter
                 }
                 $io?->progressFinish();
             } catch (\Exception | HttpExceptionInterface | ExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
-                // TODO: Logging
-                var_dump($exception->getMessage());
+                $this->logger->error('Error during category upsert', [
+                    'message' => $exception->getMessage(),
+                    'trace' => $exception->getTraceAsString(),
+                ]);
+                $io?->error('An error occurred. Check the logs for more details.');
             }
         }
     }
@@ -86,8 +91,10 @@ class CategoryImporter
                     $apiGateway->deletePersistenceRevisions($categoryData, substr($language->getLocale()->getCode(), 0, 2));
                 }
             } catch (\Exception | HttpExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
-                // TODO: Logging
-                var_dump($exception->getMessage());
+                $this->logger->error('Error during category deletion', [
+                    'message' => $exception->getMessage(),
+                    'trace' => $exception->getTraceAsString(),
+                ]);
             }
         }
     }
