@@ -48,7 +48,7 @@ class ProductNormalizer implements NormalizerInterface
             'parent' => $object->getParentId() ?? '',
             'isVariant' => null !== $object->getParentId(),
             'shop' => intval($salesChannelContext->getSalesChannelId()),
-            'ean' => $object->getEan() ?? '',
+            'ean' => $object->getEan() ?? $object->getProductNumber() ?? '',
             'active' => (bool) $object->getActive(),
             'stock' => $object->getAvailableStock(),
             'onstock' => 0 < $object->getAvailableStock(),
