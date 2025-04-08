@@ -47,7 +47,7 @@ jobs:
         run: |
           echo "Updating version to ${{ env.NEXT_VERSION }}"
           jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' package.json > tmp.json && mv tmp.json package.json
-          jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' MakairaConnectEssential/composer.json > MakairaConnectEssential/tmp.json && mv MakairaConnectEssential/tmp.json MakairaConnectEssential/composer.json                
+          jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' composer.json > tmp.json && mv tmp.json composer.json                
 
       - name: Release
         id: release
@@ -60,9 +60,14 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add CHANGELOG.md package.json MakairaConnectEssential/composer.json
+          git add CHANGELOG.md package.json composer.json
           git commit -m "chore(release): update CHANGELOG.md, package.json, and composer.json for version ${{ env.NEXT_VERSION }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+        
+      - name: Publish on Packagist
+        run: |
+          curl -X POST https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }} \
+          -H "Authorization: Bearer ${{ secrets.PACKAGIST_API_TOKEN }}" \
+          -d '{"repository":{"url":"https://github.com/your-repo-url"}}'    

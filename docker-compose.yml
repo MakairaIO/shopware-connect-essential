@@ -4,7 +4,7 @@ services:
     image: dockware/dev:latest
     container_name: shopware
     volumes:
-      - "./MakairaConnectEssential:/var/www/html/custom/plugins/MakairaConnectEssential"
+      - "./:/var/www/html/custom/plugins/MakairaConnectEssential"
       - "/var/www/html/custom/plugins"
       - "db_volume:/var/lib/mysql"
       - "shop_volume:/var/www/html"

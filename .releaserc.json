@@ -24,7 +24,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "zip -r ./ShopwareConnectEssential-${nextRelease.version}.zip ./MakairaConnectEssential CHANGELOG.md -x \"MakairaConnectEssential/tests/*\" -x \"MakairaConnectEssential/phpunit.xml\" && pwd && ls -la"
+        "prepareCmd": "zip -r ./ShopwareConnectEssential-${nextRelease.version}.zip . -x \"node_modules/*\" -x \".git/*\" -x \".github/*\" -x \".releaserc.json\" -x \".npmignore\" -x \"Makefile\" -x \".gitignore\" -x \"phpunit.xml\" -x \"tests/*\" -x \"docker-compose.yml\""
       }
     ],
     [
