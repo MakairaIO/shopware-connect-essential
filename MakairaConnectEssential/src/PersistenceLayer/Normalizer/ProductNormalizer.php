@@ -35,7 +35,7 @@ class ProductNormalizer implements NormalizerInterface
         $categories = $object->getCategories()->map(fn (CategoryEntity $category): array => [
             'catid' => $category->getId(),
             'title' => $category->getName(),
-            'shopid' => 1,
+            'shopid' => intval($salesChannelContext->getSalesChannelId()),
             'pos' => 0,
             'path' => '',
         ]);
@@ -59,7 +59,8 @@ class ProductNormalizer implements NormalizerInterface
             'meta_title' => $object->getTranslation('metaTitle'),
             'meta_description' => $object->getTranslation('metaDescription'),
             'attributeStr' => $this->getGroupedOptions($object->getProperties(), $object->getOptions()),
-            'category' => array_values($categories),
+            'category' => array_values($categories),            
+            'maincategory' => $object->getCategories()->first()?->getId(),            
             'width' => $object->getWidth(),
             'height' => $object->getHeight(),
             'length' => $object->getLength(),
