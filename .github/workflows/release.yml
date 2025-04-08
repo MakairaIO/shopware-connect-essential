@@ -28,28 +28,38 @@ jobs:
       - name: Dry run release
         id: dry-run
         run: |
-          npx semantic-release --dry-run | tee dry-run-output.txt          
-          NEXT_VERSION=$(grep -oP '(?<=Published release )[^ ]+' dry-run-output.txt | head -n 1)
-          if [ -z "$NEXT_VERSION" ]; then
+          npx semantic-release --dry-run | tee dry-run-output.txt
+          if grep -q "no new version is released" dry-run-output.txt; then
             echo "No release needed. Exiting."
+            echo "release_needed=false" >> $GITHUB_ENV
+            exit 0
+          fi
+          NEXT_VERSION=$(grep -oP '(?<=Published release )[^ ]+' dry-run-output.txt | head -n 1)
+          if [ -z "${NEXT_VERSION// }" ]; then
+            echo "No release needed. Exiting."
+            echo "release_needed=false" >> $GITHUB_ENV
             exit 0
           fi
           echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+          echo "release_needed=true" >> $GITHUB_ENV
           rm dry-run-output.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug dry run
+        if: env.release_needed == 'true'
         run: |
-          echo "Next version: ${{ env.NEXT_VERSION }}"          
+          echo "Next version: ${{ env.NEXT_VERSION }}"
 
       - name: Update version in package.json, components.json, and README.md
+        if: env.release_needed == 'true'
         run: |
           echo "Updating version to ${{ env.NEXT_VERSION }}"
           jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' package.json > tmp.json && mv tmp.json package.json
           jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' composer.json > tmp.json && mv tmp.json composer.json                
 
       - name: Release
+        if: env.release_needed == 'true'
         id: release
         run: |
           npx semantic-release
@@ -57,6 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push updated files
+        if: env.release_needed == 'true'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
@@ -70,4 +81,4 @@ jobs:
         run: |
           curl -X POST https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }} \
           -H "Authorization: Bearer ${{ secrets.PACKAGIST_API_TOKEN }}" \
-          -d '{"repository":{"url":"https://github.com/your-repo-url"}}'    
+          -d '{"repository":{"url":"https://github.com/your-repo-url"}}'

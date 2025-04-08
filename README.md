@@ -1,4 +1,4 @@
-# Makaira Connect Essential ![Version](https://img.shields.io/github/v/tag/MakairaIO/shopware-connect-essential?color=blue) [![Packagist Version](https://img.shields.io/packagist/v/makaira/shopware-connect-essential)](https://packagist.org/packages/makaira/shopware-connect-essential)
+# Makaira Connect Essential ![Version](https://img.shields.io/github/v/tag/MakairaIO/shopware-connect-essential?color=blue) [![Packagist Version](https://img.shields.io/packagist/v/makaira/shopware6-connect-essential)](https://packagist.org/packages/makaira/shopware-connect-essential)
 
 ## 🎯 Purpose
 
