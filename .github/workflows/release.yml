@@ -51,12 +51,13 @@ jobs:
         run: |
           echo "Next version: ${{ env.NEXT_VERSION }}"
 
-      - name: Update version in package.json, components.json, and README.md
+      - name: Update version in package.json, components.json, README.md, and MakairaConnectEssential.php
         if: env.release_needed == 'true'
         run: |
           echo "Updating version to ${{ env.NEXT_VERSION }}"
           jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' package.json > tmp.json && mv tmp.json package.json
-          jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' composer.json > tmp.json && mv tmp.json composer.json                
+          jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' composer.json > tmp.json && mv tmp.json composer.json
+          sed -i "s/public const PLUGIN_VERSION = '.*';/public const PLUGIN_VERSION = '${{ env.NEXT_VERSION }}';/" src/MakairaConnectEssential.php
 
       - name: Release
         if: env.release_needed == 'true'
@@ -71,8 +72,8 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add CHANGELOG.md package.json composer.json
-          git commit -m "chore(release): update CHANGELOG.md, package.json, and composer.json for version ${{ env.NEXT_VERSION }}"
+          git add CHANGELOG.md package.json composer.json src/MakairaConnectEssential.php
+          git commit -m "chore(release): update files for version ${{ env.NEXT_VERSION }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
