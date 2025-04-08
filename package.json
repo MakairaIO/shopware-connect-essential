@@ -1,27 +1,26 @@
 {
-    "name": "ShopwareConnectEssential",
-    "version": "1.0.0",
-    "description": "A Shopware plugin for connecting to Makaira and synchronize data.",
-    "main": "src/index.js",
-    "scripts": {
-        "test": "echo \"Error: no tests specified yet\" ",
-        "release": "semantic-release"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/MakairaIO/shopware-connect-essential.git"
-    },
-    "keywords": [],
-    "author": "Makaira GmbH",
-    "license": "GPL-3.0",
-    "devDependencies": {
-        "@semantic-release/commit-analyzer": "^10.0.0",
-        "@semantic-release/exec": "^7.0.3",
-        "@semantic-release/github": "^10.0.0",
-        "@semantic-release/release-notes-generator": "^11.0.0",
-        "conventional-changelog-conventionalcommits": "^8.0.0",
-        "semantic-release": "^24.0.0",
-        "@semantic-release/changelog": "^6.0.0"
-    }
-    
+  "name": "ShopwareConnectEssential",
+  "version": "1.0.0",
+  "description": "A Shopware plugin for connecting to Makaira and synchronize data.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no tests specified yet\" ",
+    "release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MakairaIO/shopware-connect-essential.git"
+  },
+  "keywords": [],
+  "author": "Makaira GmbH",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@semantic-release/commit-analyzer": "^10.0.0",
+    "@semantic-release/exec": "^7.0.3",
+    "@semantic-release/github": "^10.0.0",
+    "@semantic-release/release-notes-generator": "^11.0.0",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "semantic-release": "^24.0.0",
+    "@semantic-release/changelog": "^6.0.0"
+  }
 }
