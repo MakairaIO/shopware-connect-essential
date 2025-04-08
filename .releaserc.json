@@ -1,0 +1,45 @@
+{
+  "branches": [
+    "stable"
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "type": "feat", "release": "minor" },
+          { "type": "fix", "release": "patch" },
+          { "type": "perf", "release": "patch" },
+          { "type": "BREAKING CHANGE", "release": "major" },
+          { "type": "major", "release": "major" }
+        ],
+        "parserOpts": {
+          "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES"]
+        }
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "zip -r ./ShopwareConnectEssential-${nextRelease.version}.zip ./MakairaConnectEssential CHANGELOG.md -x \"MakairaConnectEssential/tests/*\" -x \"MakairaConnectEssential/phpunit.xml\" && pwd && ls -la"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "./ShopwareConnectEssential-*.zip",
+            "label": "Shopware Connect Essential ${nextRelease.version}"
+          }
+        ]
+      }
+    ]
+  ],
+  "preset": "conventionalcommits",
+  "tagFormat": "${version}",
+  "ci": true
+}

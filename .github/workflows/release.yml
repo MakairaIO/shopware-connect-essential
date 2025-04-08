@@ -1,0 +1,68 @@
+on:
+  push:
+    branches:
+      - stable
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Dry run release
+        id: dry-run
+        run: |
+          npx semantic-release --dry-run | tee dry-run-output.txt          
+          NEXT_VERSION=$(grep -oP '(?<=Published release )[^ ]+' dry-run-output.txt | head -n 1)
+          if [ -z "$NEXT_VERSION" ]; then
+            echo "No release needed. Exiting."
+            exit 0
+          fi
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+          rm dry-run-output.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Debug dry run
+        run: |
+          echo "Next version: ${{ env.NEXT_VERSION }}"          
+
+      - name: Update version in package.json, components.json, and README.md
+        run: |
+          echo "Updating version to ${{ env.NEXT_VERSION }}"
+          jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' package.json > tmp.json && mv tmp.json package.json
+          jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' MakairaConnectEssential/composer.json > MakairaConnectEssential/tmp.json && mv MakairaConnectEssential/tmp.json MakairaConnectEssential/composer.json                
+
+      - name: Release
+        id: release
+        run: |
+          npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push updated files
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add CHANGELOG.md package.json MakairaConnectEssential/composer.json
+          git commit -m "chore(release): update CHANGELOG.md, package.json, and composer.json for version ${{ env.NEXT_VERSION }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

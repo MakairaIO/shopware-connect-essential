@@ -1,0 +1,10 @@
+MakairaConnectEssential/tests
+.releaserc.json
+README.md
+package.json
+Makefile
+docker-compose.yml
+.gitignore
+.github/
+node_modules/
+.git/
