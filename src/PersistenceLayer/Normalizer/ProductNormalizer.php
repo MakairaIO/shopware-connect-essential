@@ -82,7 +82,7 @@ class ProductNormalizer implements NormalizerInterface
             'price' => $object->getCalculatedPrice()->getUnitPrice(),
             'referencePrice' => $object->getCalculatedPrice()->getReferencePrice()?->getPrice(),
             'images' => array_values($images),
-            'url' => $this->getSalesChannelUrl($salesChannelContext) . '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
+            'url' => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp' => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
     }
