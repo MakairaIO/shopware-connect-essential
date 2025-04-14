@@ -1,6 +1,6 @@
 {
   "name": "ShopwareConnectEssential",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Shopware plugin for connecting to Makaira and synchronize data.",
   "main": "src/index.js",
   "scripts": {
