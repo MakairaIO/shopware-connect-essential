@@ -48,7 +48,7 @@ class CategoryNormalizer implements NormalizerInterface
             'active' => $object->getActive(),
             'hidden' => !$object->getVisible(),
             'image' => $this->processMedia($object->getMedia()),
-            'url' => $this->getSalesChannelUrl($salesChannelContext) . '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
+            'url' => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp' => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
     }
