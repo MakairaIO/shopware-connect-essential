@@ -20,7 +20,7 @@ trait MediaTrait
         }
 
         return [
-            'original' => $media->getUrl(),
+            'original'   => $media->getUrl(),
             'thumbnails' => $thumbnails,
         ];
     }

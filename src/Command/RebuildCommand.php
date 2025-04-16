@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace MakairaConnectEssential\Command;
 
@@ -42,7 +44,7 @@ class RebuildCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $io      = new SymfonyStyle($input, $output);
         $context = Context::createCLIContext();
 
         $salesChannelIds = $input->getArgument('salesChannelId') ? [$input->getArgument('salesChannelId')] : null;
@@ -60,11 +62,11 @@ class RebuildCommand extends Command
             $io->title('Initialize rebuild for sales-channel "' . $salesChannelContext->getSalesChannel()->getName() . '"');
 
             try {
-                $apiConfig = $this->pluginConfig->createMakairaApiConfig($salesChannelId);
+                $apiConfig  = $this->pluginConfig->createMakairaApiConfig($salesChannelId);
                 $apiGateway = $this->apiGatewayFactory->create($apiConfig);
                 $apiGateway->rebuildPersistenceLayer();
                 $io->success('Finished');
-            } catch(\Exception | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $exception) {
+            } catch (\Exception | ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $exception) {
                 $io->error($exception->getMessage());
             }
         }

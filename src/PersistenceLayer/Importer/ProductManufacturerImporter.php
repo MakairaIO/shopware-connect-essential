@@ -39,7 +39,7 @@ class ProductManufacturerImporter
         }
 
         $apiGateway = $this->apiGatewayFactory->create($apiConfig);
-        $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
+        $languages  = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
             $io?->block(sprintf('Productmanufacturer for language: %s', $language->getLocale()->getCode()));
@@ -52,13 +52,13 @@ class ProductManufacturerImporter
                 $io?->progressStart(count($productManufacturerIds));
                 // TODO: add chunk size to plugin config
                 foreach (array_chunk($productManufacturerIds, 100) as $productManufacturerChunk) {
-                    $productManufacturers = $this->productManufacturerLoader->loadByIds($productManufacturerChunk, $salesChannelLanguageContext);
+                    $productManufacturers          = $this->productManufacturerLoader->loadByIds($productManufacturerChunk, $salesChannelLanguageContext);
                     $normalizedProductManufacturer = [];
                     foreach ($productManufacturers as $productManufacturer) {
                         $io?->progressAdvance();
                         $normalizedProductManufacturer[] = [
                             'language' => substr($language->getLocale()->getCode(), 0, 2),
-                            'data' => $this->productManufacturerNormalizer->normalize($productManufacturer, null, ['salesChannelContext' => $salesChannelLanguageContext]),
+                            'data'     => $this->productManufacturerNormalizer->normalize($productManufacturer, null, ['salesChannelContext' => $salesChannelLanguageContext]),
                         ];
                     }
                     $apiGateway->insertPersistenceRevisions($normalizedProductManufacturer);
@@ -67,7 +67,7 @@ class ProductManufacturerImporter
             } catch (\Exception | HttpExceptionInterface | ExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 $this->logger->error('Error during product manufacturer upsert', [
                     'message' => $exception->getMessage(),
-                    'trace' => $exception->getTraceAsString(),
+                    'trace'   => $exception->getTraceAsString(),
                 ]);
                 $io?->error('An error occurred. Check the logs for more details.');
             }
@@ -77,22 +77,24 @@ class ProductManufacturerImporter
     public function delete(SalesChannelContext $salesChannelContext, ApiConfig $apiConfig, array $productManufacturerIds): void
     {
         $apiGateway = $this->apiGatewayFactory->create($apiConfig);
-        $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
+        $languages  = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
             try {
                 foreach (array_chunk($productManufacturerIds, 100) as $productManufacturerChunk) {
-                    $productManufacturerData = array_map(fn($productManufacturerId) => [
+                    $productManufacturerData = array_map(
+                        fn ($productManufacturerId) => [
                         'type' => 'product',
-                        'id' => $productManufacturerId,
-                    ], $productManufacturerChunk
+                        'id'   => $productManufacturerId,
+                    ],
+                        $productManufacturerChunk
                     );
                     $apiGateway->deletePersistenceRevisions($productManufacturerData, substr($language->getLocale()->getCode(), 0, 2));
                 }
             } catch (\Exception | HttpExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 $this->logger->error('Error during product manufacturer deletion', [
                     'message' => $exception->getMessage(),
-                    'trace' => $exception->getTraceAsString(),
+                    'trace'   => $exception->getTraceAsString(),
                 ]);
             }
         }

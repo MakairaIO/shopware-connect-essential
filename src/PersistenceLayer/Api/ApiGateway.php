@@ -34,7 +34,7 @@ final readonly class ApiGateway implements ApiGatewayInterface
     {
         $this->insertPersistenceRevisions([
             [
-                'data' => $data,
+                'data'     => $data,
                 'language' => $language,
             ],
         ]);
@@ -56,10 +56,10 @@ final readonly class ApiGateway implements ApiGatewayInterface
 
         $response = $this->apiClient->request('PUT', '/persistence/revisions', null, [
             'import_timestamp' => $this->clock->now()->format('Y-m-d H:i:s'),
-            'items' => array_map(fn (array $item): array => [
+            'items'            => array_map(fn (array $item): array => [
                 'source_revision' => 1,
-                'language_id' => $item['language'],
-                'data' => $item['data'],
+                'language_id'     => $item['language'],
+                'data'            => $item['data'],
             ], $items),
         ]);
 
@@ -80,7 +80,7 @@ final readonly class ApiGateway implements ApiGatewayInterface
     {
         $response = $this->apiClient->request('PATCH', '/persistence/revisions', null, [
             'language_id' => $language,
-            'data' => $data,
+            'data'        => $data,
         ]);
 
         if ('success' !== ($response->toArray(false)['status'] ?? null)) {
@@ -101,8 +101,8 @@ final readonly class ApiGateway implements ApiGatewayInterface
         $response = $this->apiClient->request('PUT', '/persistence/revisions', null, [
             'items' => array_map(fn (array $data): array => [
                 'language_id' => $language,
-                'delete' => true,
-                'data' => $data,
+                'delete'      => true,
+                'data'        => $data,
             ], $items),
         ]);
 

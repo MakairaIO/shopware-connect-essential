@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace MakairaConnectEssential\Command;
 
@@ -42,7 +44,7 @@ class UpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $io      = new SymfonyStyle($input, $output);
         $context = Context::createCLIContext();
 
         $salesChannelIds = $input->getArgument('salesChannelId') ? [$input->getArgument('salesChannelId')] : null;
@@ -66,7 +68,7 @@ class UpdateCommand extends Command
                 $this->productManufacturerImporter->upsert($salesChannelContext, $makairaApiConfig, [], $io);
                 $this->productImporter->upsert($salesChannelContext, $makairaApiConfig, [], $io);
                 $io->success('Finished');
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 $io->error($exception->getMessage());
             }
         }

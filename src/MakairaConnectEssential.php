@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace MakairaConnectEssential;
 
@@ -15,7 +17,7 @@ class MakairaConnectEssential extends Plugin
     {
         parent::activate($activateContext);
 
-        $salesChannelLoader = $this->container->get('MakairaConnectEssential\Loader\SalesChannelLoader');
+        $salesChannelLoader  = $this->container->get('MakairaConnectEssential\Loader\SalesChannelLoader');
         $systemConfigService = $this->container->get('Shopware\Core\System\SystemConfig\SystemConfigService');
 
         $allSalesChannelIds = $salesChannelLoader->getAllIds(Context::createDefaultContext(), null);

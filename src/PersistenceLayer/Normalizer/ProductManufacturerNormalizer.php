@@ -15,12 +15,12 @@ class ProductManufacturerNormalizer implements NormalizerInterface
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         return [
-            'id' => $object->getId(),
-            'type' => 'manufacturer',
+            'id'                 => $object->getId(),
+            'type'               => 'manufacturer',
             'manufacturer_title' => $object->getTranslation('name'),
-            'customFields' => $this->processCustomFields($object->getCustomFields()),
-            'active' => true,
-            'timestamp' => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
+            'customFields'       => $this->processCustomFields($object->getCustomFields()),
+            'active'             => true,
+            'timestamp'          => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
     }
 

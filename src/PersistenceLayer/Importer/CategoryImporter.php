@@ -39,7 +39,7 @@ class CategoryImporter
         }
 
         $apiGateway = $this->apiGatewayFactory->create($apiConfig);
-        $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
+        $languages  = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
             $io?->block(sprintf('Category for language: %s', $language->getLocale()->getCode()));
@@ -52,14 +52,14 @@ class CategoryImporter
                 $io?->progressStart(count($categoryIds));
                 // TODO: add chunk size to plugin config
                 foreach (array_chunk($categoryIds, 100) as $categoryChunk) {
-                    $categories = $this->categoryLoader->loadByIds($categoryChunk, $salesChannelLanguageContext);
+                    $categories           = $this->categoryLoader->loadByIds($categoryChunk, $salesChannelLanguageContext);
                     $normalizedCategories = [];
 
                     foreach ($categories as $category) {
                         $io?->progressAdvance();
                         $normalizedCategories[] = [
                             'language' => substr($language->getLocale()->getCode(), 0, 2),
-                            'data' => $this->categoryNormalizer->normalize($category, null, ['salesChannelContext' => $salesChannelLanguageContext]),
+                            'data'     => $this->categoryNormalizer->normalize($category, null, ['salesChannelContext' => $salesChannelLanguageContext]),
                         ];
                     }
                     $apiGateway->insertPersistenceRevisions($normalizedCategories);
@@ -68,7 +68,7 @@ class CategoryImporter
             } catch (\Exception | HttpExceptionInterface | ExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 $this->logger->error('Error during category upsert', [
                     'message' => $exception->getMessage(),
-                    'trace' => $exception->getTraceAsString(),
+                    'trace'   => $exception->getTraceAsString(),
                 ]);
                 $io?->error('An error occurred. Check the logs for more details.');
             }
@@ -78,22 +78,24 @@ class CategoryImporter
     public function delete(SalesChannelContext $salesChannelContext, ApiConfig $apiConfig, array $categoryIds): void
     {
         $apiGateway = $this->apiGatewayFactory->create($apiConfig);
-        $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
+        $languages  = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
             try {
                 foreach (array_chunk($categoryIds, 100) as $categoryChunk) {
-                    $categoryData = array_map(fn($categoryId) => [
+                    $categoryData = array_map(
+                        fn ($categoryId) => [
                             'type' => 'category',
-                            'id' => $categoryId,
-                        ], $categoryChunk
+                            'id'   => $categoryId,
+                        ],
+                        $categoryChunk
                     );
                     $apiGateway->deletePersistenceRevisions($categoryData, substr($language->getLocale()->getCode(), 0, 2));
                 }
             } catch (\Exception | HttpExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 $this->logger->error('Error during category deletion', [
                     'message' => $exception->getMessage(),
-                    'trace' => $exception->getTraceAsString(),
+                    'trace'   => $exception->getTraceAsString(),
                 ]);
             }
         }

@@ -39,7 +39,7 @@ class ProductImporter
         }
 
         $apiGateway = $this->apiGatewayFactory->create($apiConfig);
-        $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
+        $languages  = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
             $io?->block(sprintf('Products for language: %s', $language->getLocale()->getCode()));
@@ -52,14 +52,14 @@ class ProductImporter
                 $io?->progressStart(count($productIds));
                 // TODO: add chunk size to plugin config
                 foreach (array_chunk($productIds, 100) as $productChunk) {
-                    $products = $this->productLoader->loadByIds($productChunk, $salesChannelLanguageContext);
+                    $products           = $this->productLoader->loadByIds($productChunk, $salesChannelLanguageContext);
                     $normalizedProducts = [];
 
                     foreach ($products as $product) {
                         $io?->progressAdvance();
                         $normalizedProducts[] = [
                             'language' => substr($language->getLocale()->getCode(), 0, 2),
-                            'data' => $this->productNormalizer->normalize($product, null, ['salesChannelContext' => $salesChannelLanguageContext]),
+                            'data'     => $this->productNormalizer->normalize($product, null, ['salesChannelContext' => $salesChannelLanguageContext]),
                         ];
                     }
                     $apiGateway->insertPersistenceRevisions($normalizedProducts);
@@ -68,7 +68,7 @@ class ProductImporter
             } catch (\Exception | HttpExceptionInterface | ExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 $this->logger->error('Error during product upsert', [
                     'message' => $exception->getMessage(),
-                    'trace' => $exception->getTraceAsString(),
+                    'trace'   => $exception->getTraceAsString(),
                 ]);
                 $io?->error('An error occurred. Check the logs for more details.');
             }
@@ -78,22 +78,24 @@ class ProductImporter
     public function delete(SalesChannelContext $salesChannelContext, ApiConfig $apiConfig, array $productIds): void
     {
         $apiGateway = $this->apiGatewayFactory->create($apiConfig);
-        $languages = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
+        $languages  = $this->salesChannelLoader->getLanguages($salesChannelContext->getContext(), $salesChannelContext->getSalesChannelId());
 
         foreach ($languages as $language) {
             try {
                 foreach (array_chunk($productIds, 100) as $productChunk) {
-                    $productData = array_map(fn($productId) => [
+                    $productData = array_map(
+                        fn ($productId) => [
                         'type' => 'product',
-                        'id' => $productId,
-                    ], $productChunk
+                        'id'   => $productId,
+                    ],
+                        $productChunk
                     );
                     $apiGateway->deletePersistenceRevisions($productData, substr($language->getLocale()->getCode(), 0, 2));
                 }
             } catch (\Exception | HttpExceptionInterface | DecodingExceptionInterface | TransportExceptionInterface $exception) {
                 $this->logger->error('Error during product deletion', [
                     'message' => $exception->getMessage(),
-                    'trace' => $exception->getTraceAsString(),
+                    'trace'   => $exception->getTraceAsString(),
                 ]);
             }
         }

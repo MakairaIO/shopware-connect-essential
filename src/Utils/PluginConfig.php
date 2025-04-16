@@ -9,11 +9,11 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class PluginConfig
 {
-    public const MAKAIRA_BASE_URL = 'makairaBaseUrl';
+    public const MAKAIRA_BASE_URL      = 'makairaBaseUrl';
     public const MAKAIRA_SHARED_SECRET = 'makairaSharedSecret';
-    public const MAKAIRA_CUSTOMER = 'makairaCustomer';
-    public const MAKAIRA_INSTANCE = 'makairaInstance';
-    public const API_TIMEOUT = 'apiTimeout';
+    public const MAKAIRA_CUSTOMER      = 'makairaCustomer';
+    public const MAKAIRA_INSTANCE      = 'makairaInstance';
+    public const API_TIMEOUT           = 'apiTimeout';
 
     public const KEY_PREFIX = 'MakairaConnectEssential.config.';
 

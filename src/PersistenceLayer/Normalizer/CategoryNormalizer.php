@@ -32,24 +32,24 @@ class CategoryNormalizer implements NormalizerInterface
         $salesChannelContext = $context['salesChannelContext'];
 
         return [
-            'id' => $object->getId(),
-            'type' => 'category',
-            'shop' => intval($salesChannelContext->getSalesChannelId()),
-            'category_title' => $object->getTranslation('name'),
-            'level' => $object->getLevel(),
-            'parent' => $object->getParentId() ?? '',
-            'subcategories' => $this->categoryLoader->getSubcategories($object->getId(), $salesChannelContext),
-            'hierarchy' => $this->getHierarchy($object),
-            'description' => $object->getTranslation('description'),
-            'metaTitle' => $object->getTranslation('metaTitle'),
+            'id'              => $object->getId(),
+            'type'            => 'category',
+            'shop'            => intval($salesChannelContext->getSalesChannelId()),
+            'category_title'  => $object->getTranslation('name'),
+            'level'           => $object->getLevel(),
+            'parent'          => $object->getParentId() ?? '',
+            'subcategories'   => $this->categoryLoader->getSubcategories($object->getId(), $salesChannelContext),
+            'hierarchy'       => $this->getHierarchy($object),
+            'description'     => $object->getTranslation('description'),
+            'metaTitle'       => $object->getTranslation('metaTitle'),
             'metaDescription' => $object->getTranslation('metaDescription'),
-            'keywords' => $object->getTranslation('keywords'),
-            'customFields' => $this->processCustomFields($object->getCustomFields()),
-            'active' => $object->getActive(),
-            'hidden' => !$object->getVisible(),
-            'image' => $this->processMedia($object->getMedia()),
-            'url' => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
-            'timestamp' => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
+            'keywords'        => $object->getTranslation('keywords'),
+            'customFields'    => $this->processCustomFields($object->getCustomFields()),
+            'active'          => $object->getActive(),
+            'hidden'          => !$object->getVisible(),
+            'image'           => $this->processMedia($object->getMedia()),
+            'url'             => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
+            'timestamp'       => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
     }
 
@@ -67,7 +67,7 @@ class CategoryNormalizer implements NormalizerInterface
 
     protected function getHierarchy(CategoryEntity $category): string
     {
-        $hierarchy = null !== $category->getPath() ? \array_slice(explode('|', $category->getPath()), 1, -1) : [];
+        $hierarchy   = null !== $category->getPath() ? \array_slice(explode('|', $category->getPath()), 1, -1) : [];
         $hierarchy[] = $category->getId();
 
         return implode('//', $hierarchy);

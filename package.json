@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no tests specified yet\" ",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -15,12 +16,15 @@
   "author": "Makaira GmbH",
   "license": "GPL-3.0",
   "devDependencies": {
+    "@prettier/plugin-xml": "^3.4.1",
+    "@semantic-release/changelog": "^6.0.0",
     "@semantic-release/commit-analyzer": "^10.0.0",
     "@semantic-release/exec": "^7.0.3",
     "@semantic-release/github": "^10.0.0",
     "@semantic-release/release-notes-generator": "^11.0.0",
     "conventional-changelog-conventionalcommits": "^8.0.0",
-    "semantic-release": "^24.0.0",
-    "@semantic-release/changelog": "^6.0.0"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
+    "semantic-release": "^24.0.0"
   }
 }
