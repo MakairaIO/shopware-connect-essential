@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MakairaConnectEssential\PersistenceLayer\Normalizer;
 
+use MakairaConnectEssential\Events\ModifierQueryRequestEvent;
 use MakairaConnectEssential\PersistenceLayer\Traits\CustomFieldsTrait;
 use MakairaConnectEssential\PersistenceLayer\Traits\MediaTrait;
 use MakairaConnectEssential\PersistenceLayer\Traits\UrlTrait;
@@ -16,12 +17,18 @@ use Shopware\Core\Content\Property\Aggregate\PropertyGroupOption\PropertyGroupOp
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\Tag\TagEntity;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ProductNormalizer implements NormalizerInterface
 {
     use CustomFieldsTrait;
     use MediaTrait;
     use UrlTrait;
+
+    public function __construct(
+        private EventDispatcherInterface $eventDispatcher
+    ) {
+    }
 
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
@@ -42,7 +49,7 @@ class ProductNormalizer implements NormalizerInterface
 
         $images = $object->getMedia()->fmap(fn (ProductMediaEntity $media): ?array => $this->processMedia($media->getMedia()));
 
-        return [
+        $data = [
             'id'                  => $object->getId(),
             'type'                => $object->getParentId() !== null ? 'variant' : 'product',
             'parent'              => $object->getParentId() ?? '',
@@ -85,6 +92,13 @@ class ProductNormalizer implements NormalizerInterface
             'url'                 => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp'           => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
+
+        // Dispatch the ModifierQueryRequestEvent for products
+        $event = new ModifierQueryRequestEvent($data);
+        $this->eventDispatcher->dispatch($event, ModifierQueryRequestEvent::NAME_PRODUCT);
+
+        // Return the potentially modified data
+        return $event->getQuery()->getArrayCopy();
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
