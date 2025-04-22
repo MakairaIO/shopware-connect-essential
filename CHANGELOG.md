@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.0...1.1.1) (2025-04-22)
+
+### Bug Fixes
+
+* ignor linter on release commits ([6a8bccb](https://github.com/MakairaIO/shopware-connect-essential/commit/6a8bccb0bdbe0a8a84d6b3281c07394b2c81e4ac))
+
 ## [1.0.2](https://github.com/MakairaIO/shopware-connect-essential/compare/1.0.1...1.0.2) (2025-04-14)
 
 ### Bug Fixes

@@ -11,7 +11,7 @@ use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 
 class MakairaConnectEssential extends Plugin
 {
-    public const PLUGIN_VERSION = '1.0.2';
+    public const PLUGIN_VERSION = '1.1.1';
 
     public function activate(ActivateContext $activateContext): void
     {
