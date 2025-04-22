@@ -1,7 +1,5 @@
 {
-  "branches": [
-    "stable"
-  ],
+  "branches": ["stable"],
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
@@ -24,7 +22,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "zip -r ./ShopwareConnectEssential-${nextRelease.version}.zip . -x \"node_modules/*\" -x \".git/*\" -x \".github/*\" -x \".releaserc.json\" -x \".npmignore\" -x \"Makefile\" -x \".gitignore\" -x \"phpunit.xml\" -x \"tests/*\" -x \"docker-compose.yml\""
+        "prepareCmd": "zip -r ./ShopwareConnectEssential-${nextRelease.version}.zip . -x \"node_modules/*\" -x \".git/*\" -x \".github/*\" -x \".releaserc.json\" -x \".npmignore\" -x \"Makefile\" -x \".gitignore\" -x \"phpunit.xml\" -x \"tests/*\" -x \"docker-compose.yml\" -x \".husky/*\" -x \"php-cs*\""
       }
     ],
     [

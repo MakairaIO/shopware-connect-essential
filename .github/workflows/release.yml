@@ -16,8 +16,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm install
@@ -73,8 +73,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add CHANGELOG.md package.json composer.json src/MakairaConnectEssential.php
-          git commit -m "chore(release): update files for version ${{ env.NEXT_VERSION }}"
+          git commit -m "chore(release): update files for version ${{ env.NEXT_VERSION }}" --no-verify
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
