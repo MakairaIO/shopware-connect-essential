@@ -5,6 +5,7 @@
 The **Makaira Connect Essential** module serves as a bridge between Shopware and the Makaira platform. It provides functionality to manage and synchronize data between the two systems, ensuring that the persistence layer in Makaira is kept up-to-date with the latest information from Shopware. This module is essential for enabling seamless integration and efficient data handling for Shopware-based e-commerce platforms using Makaira.
 
 ### ✨ Key Features:
+
 - 🔄 **Synchronization** of sales channel data with Makaira.
 - 🛠️ **Management** of the Makaira persistence layer, including rebuilding, updating, and switching data.
 - 🌐 **Support** for multiple sales channels with configurable credentials.
@@ -18,7 +19,9 @@ The **Makaira Connect Essential** module serves as a bridge between Shopware and
 ## ⚙️ Installation
 
 To install the **Makaira Connect Essential** module in your Shopware 6 environment, follow these steps:
+
 1. **Install via Composer**:
+
    - Run the following command to require the plugin using Composer:
      ```bash
      composer require makaira/shopware-connect-essential
@@ -30,6 +33,7 @@ To install the **Makaira Connect Essential** module in your Shopware 6 environme
      bin/console plugin:install --activate MakairaConnectEssential
      ```
 3. **Configure the Plugin**:
+
    - Navigate to the Shopware administration panel.
    - Go to **Settings > Plugins > Makaira Connect Essential**.
    - Enter the required Makaira API credentials for each sales channel.
@@ -48,19 +52,23 @@ To install the **Makaira Connect Essential** module in your Shopware 6 environme
 The following configuration options are available for the **Makaira Connect Essential** module:
 
 1. **Base URL of Makaira API**:
+
    - **Key**: `makairaBaseUrl`
    - **Description**: The base URL of the Makaira API.
    - **Default Value**: `https://<customer>.makaira.io`
 
 2. **Makaira Shared Secret**:
+
    - **Key**: `makairaSharedSecret`
    - **Description**: The shared secret for authenticating with the Makaira API. This value must be set per sales channel.
 
 3. **Makaira Customer**:
+
    - **Key**: `makairaCustomer`
    - **Description**: The customer identifier for the Makaira instance.
 
 4. **Makaira Instance**:
+
    - **Key**: `makairaInstance`
    - **Description**: The instance name for Makaira (e.g., `live`). This value must be set per sales channel.
 
@@ -90,18 +98,21 @@ The following configuration options are available for the **Makaira Connect Esse
 The following commands allow you to manage the Makaira persistence layer effectively. They can be used to perform an initial full data push or to manually trigger updates and changes when needed. Once the initial setup is complete, the module ensures continuous synchronization through event subscribers, keeping your data up-to-date in real time.
 
 ### 🔧 Rebuild Command
+
 - **Name**: `makaira:persistence-layer:rebuild`
 - **Description**: Initialize rebuild of the Makaira persistence layer.
 - **Arguments**:
   - `salesChannelId` (optional): The ID of the sales channel to rebuild. If not provided, all sales channels will be processed.
 
 ### 🔄 Update Command
+
 - **Name**: `makaira:persistence-layer:update`
 - **Description**: Push all data to the Makaira persistence layer.
 - **Arguments**:
   - `salesChannelId` (optional): The ID of the sales channel to update. If not provided, all sales channels will be processed.
 
 ### 🔀 Switch Command
+
 - **Name**: `makaira:persistence-layer:switch`
 - **Description**: Use the rebuild data as active data for the Makaira persistence layer.
 - **Arguments**:
@@ -111,15 +122,66 @@ The following commands allow you to manage the Makaira persistence layer effecti
 
 💡 **Tip**: Use these commands to manage your Makaira persistence layer efficiently and ensure your Shopware data stays in sync with Makaira!
 
-
 ## 🛠️ Development Setup
 
 ### Install
+
 1. `git clone git@github.com:MakairaIO/shopware-connect-essential.git`
 2. `make init`
 
-### Usefull commands
+### Useful commands
 
 - Start project: `make up`
 - Stop project: `make down`
 - SSH to container: `make ssh`
+
+### 🔧 Event: ModifierQueryRequestEvent
+
+The `ModifierQueryRequestEvent` provides developers with the ability to modify the query before it is sent to the Makaira API. This event can be used to customize or extend the data being sent for categories, products, variants, or manufacturers.
+
+#### Event Names:
+
+- **Category**: `makaira.essential.request.modifier.category`
+- **Product**: `makaira.essential.request.modifier.product`
+- **Variant**: `makaira.essential.request.modifier.variant`
+- **Manufacturer**: `makaira.essential.request.modifier.manufacturer`
+
+#### Example Usage:
+
+To listen to and modify the query, create an event subscriber in your custom plugin:
+
+```php
+// filepath: src/Subscriber/ModifierQuerySubscriber.php
+<?php
+
+declare(strict_types=1);
+
+namespace YourNamespace\Subscriber;
+
+use MakairaConnectEssential\Events\ModifierQueryRequestEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class ModifierQuerySubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            ModifierQueryRequestEvent::NAME_PRODUCT => 'onModifyProductQuery',
+        ];
+    }
+
+    public function onModifyProductQuery(ModifierQueryRequestEvent $event): void
+    {
+        $query = $event->getQuery();
+
+        // Add location stock for Madrid and Paris
+        $query['locationStock'] = [
+            'Madrid' => 100,  // Example stock value for Madrid
+            'Paris' => 150,   // Example stock value for Paris
+        ];
+
+        // Update the query
+        $event->getQuery()->exchangeArray($query);
+    }
+}
+```
