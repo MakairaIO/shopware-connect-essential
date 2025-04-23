@@ -59,17 +59,6 @@ jobs:
           jq --arg version "${{ env.NEXT_VERSION }}" '.version = $version' composer.json > tmp.json && mv tmp.json composer.json
           sed -i "s/public const PLUGIN_VERSION = '.*';/public const PLUGIN_VERSION = '${{ env.NEXT_VERSION }}';/" src/MakairaConnectEssential.php
 
-      - name: Push updated files
-        if: env.release_needed == 'true'
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add CHANGELOG.md package.json composer.json src/MakairaConnectEssential.php
-          git commit -m "chore(release): update files for version ${{ env.NEXT_VERSION }}" --no-verify
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Release
         if: env.release_needed == 'true'
         id: release
