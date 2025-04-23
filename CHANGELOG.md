@@ -1,3 +1,11 @@
+## [1.1.4](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.3...1.1.4) (2025-04-23)
+
+### Bug Fixes
+
+* add dedicated logging ([e6782b5](https://github.com/MakairaIO/shopware-connect-essential/commit/e6782b5bc3e01b71d9fb0467c335d1ef11756333))
+* add updated pluginfile ([21f0d37](https://github.com/MakairaIO/shopware-connect-essential/commit/21f0d378e1a63c366f3807ea8cfead13ce7acd63))
+* image handling for products and categories ([7c0e99e](https://github.com/MakairaIO/shopware-connect-essential/commit/7c0e99e055fc7014d24e0e8dd666921eb07db42e))
+
 ## [1.1.3](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.2...1.1.3) (2025-04-23)
 
 ### Bug Fixes
