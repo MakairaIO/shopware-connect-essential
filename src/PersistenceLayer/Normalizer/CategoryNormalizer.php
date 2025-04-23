@@ -7,7 +7,6 @@ namespace MakairaConnectEssential\PersistenceLayer\Normalizer;
 use MakairaConnectEssential\Events\ModifierQueryRequestEvent;
 use MakairaConnectEssential\Loader\CategoryLoader;
 use MakairaConnectEssential\PersistenceLayer\Traits\CustomFieldsTrait;
-use MakairaConnectEssential\PersistenceLayer\Traits\MediaTrait;
 use MakairaConnectEssential\PersistenceLayer\Traits\UrlTrait;
 use Shopware\Core\Content\Category\CategoryEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -17,7 +16,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class CategoryNormalizer implements NormalizerInterface
 {
     use CustomFieldsTrait;
-    use MediaTrait;
     use UrlTrait;
 
     public function __construct(
@@ -36,24 +34,24 @@ class CategoryNormalizer implements NormalizerInterface
         $salesChannelContext = $context['salesChannelContext'];
 
         $data = [
-            'id'              => $object->getId(),
-            'type'            => 'category',
-            'shop'            => intval($salesChannelContext->getSalesChannelId()),
-            'category_title'  => $object->getTranslation('name'),
-            'level'           => $object->getLevel(),
-            'parent'          => $object->getParentId() ?? '',
-            'subcategories'   => $this->categoryLoader->getSubcategories($object->getId(), $salesChannelContext),
-            'hierarchy'       => $this->getHierarchy($object),
-            'description'     => $object->getTranslation('description'),
-            'metaTitle'       => $object->getTranslation('metaTitle'),
-            'metaDescription' => $object->getTranslation('metaDescription'),
-            'keywords'        => $object->getTranslation('keywords'),
-            'customFields'    => $this->processCustomFields($object->getCustomFields()),
-            'active'          => $object->getActive(),
-            'hidden'          => !$object->getVisible(),
-            'image'           => $this->processMedia($object->getMedia()),
-            'url'             => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
-            'timestamp'       => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
+            'id'               => $object->getId(),
+            'type'             => 'category',
+            'shop'             => intval($salesChannelContext->getSalesChannelId()),
+            'category_title'   => $object->getTranslation('name'),
+            'level'            => $object->getLevel(),
+            'parent'           => $object->getParentId() ?? '',
+            'subcategories'    => $this->categoryLoader->getSubcategories($object->getId(), $salesChannelContext),
+            'hierarchy'        => $this->getHierarchy($object),
+            'description'      => $object->getTranslation('description'),
+            'metaTitle'        => $object->getTranslation('metaTitle'),
+            'metaDescription'  => $object->getTranslation('metaDescription'),
+            'keywords'         => $object->getTranslation('keywords'),
+            'customFields'     => $this->processCustomFields($object->getCustomFields()),
+            'active'           => $object->getActive(),
+            'hidden'           => !$object->getVisible(),
+            'images'           => $object->getMedia() ? ['/' . $object->getMedia()->getPath()] : null,
+            'url'              => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
+            'timestamp'        => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
 
         // Dispatch the ModifierQueryRequestEvent for categories

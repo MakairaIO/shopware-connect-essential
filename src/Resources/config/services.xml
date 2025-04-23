@@ -37,7 +37,7 @@
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory" />
             <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader" />
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\CategoryNormalizer" />
-            <argument type="service" id="logger" />
+            <argument type="service" id="monolog.logger.makaira_essential" />
         </service>
         <service id="MakairaConnectEssential\PersistenceLayer\Importer\ProductManufacturerImporter">
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory" />
@@ -45,15 +45,15 @@
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory" />
             <argument type="service" id="MakairaConnectEssential\Loader\ProductManufacturerLoader" />
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductManufacturerNormalizer" />
-            <argument type="service" id="logger" />
+            <argument type="service" id="monolog.logger.makaira_essential" />
         </service>
         <service id="MakairaConnectEssential\PersistenceLayer\Importer\ProductImporter">
             <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Api\ApiGatewayFactory" />
             <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader" />
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory" />
             <argument type="service" id="MakairaConnectEssential\Loader\ProductLoader" />
-            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer" />
-            <argument type="service" id="logger" />
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer" />                                                        
+            <argument type="service" id="monolog.logger.makaira_essential" />
         </service>
 
         <!-- Loader -->
@@ -80,6 +80,8 @@
         </service>
         <service id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer">
             <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="monolog.logger.makaira_essential" />
+            <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader" />
         </service>
 
         <!-- Persistence Layer -->

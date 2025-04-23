@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace MakairaConnectEssential\PersistenceLayer\Normalizer;
 
 use MakairaConnectEssential\Events\ModifierQueryRequestEvent;
+use MakairaConnectEssential\Loader\CategoryLoader;
 use MakairaConnectEssential\PersistenceLayer\Traits\CustomFieldsTrait;
-use MakairaConnectEssential\PersistenceLayer\Traits\MediaTrait;
 use MakairaConnectEssential\PersistenceLayer\Traits\UrlTrait;
+use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Category\CategoryEntity;
-use Shopware\Core\Content\Product\Aggregate\ProductMedia\ProductMediaEntity;
 use Shopware\Core\Content\Product\Aggregate\ProductSearchKeyword\ProductSearchKeywordEntity;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\SalesChannelProductEntity;
@@ -22,11 +22,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class ProductNormalizer implements NormalizerInterface
 {
     use CustomFieldsTrait;
-    use MediaTrait;
     use UrlTrait;
 
     public function __construct(
-        private EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher,
+        private LoggerInterface $logger,
+        private CategoryLoader $categoryLoader
     ) {
     }
 
@@ -39,15 +40,52 @@ class ProductNormalizer implements NormalizerInterface
         /** @var SalesChannelContext $salesChannelContext */
         $salesChannelContext = $context['salesChannelContext'];
 
-        $categories = $object->getCategories()->map(fn (CategoryEntity $category): array => [
-            'catid'  => $category->getId(),
-            'title'  => $category->getName(),
-            'shopid' => intval($salesChannelContext->getSalesChannelId()),
-            'pos'    => 0,
-            'path'   => '',
-        ]);
+        $categories = $object->getCategories()->map(function (CategoryEntity $category) use ($salesChannelContext): array {
+            // use the category loader to load the category
+            $category = $this->categoryLoader->loadByIds([$category->getId()], $salesChannelContext)->first();
+            if (! $category instanceof CategoryEntity) {
+                return [];
+            }
+            $categoryData[] = [
+                'catid'  => $category->getId(),
+                'title'  => $category->getName(),
+                'shopid' => intval($salesChannelContext->getSalesChannelId()),
+                'pos'    => 0,
+                'path'   => '/' . $this->getSeoUrlPath($category->getSeoUrls(), $salesChannelContext->getLanguageId()),
+            ];
 
-        $images = $object->getMedia()->fmap(fn (ProductMediaEntity $media): ?array => $this->processMedia($media->getMedia()));
+            // Process the path to include all categories in the path
+            if ($category->getPath()) {
+                $this->logger->info('Category path: ', ['path' => $category->getPath()]);
+                $pathIds = array_values(array_filter(explode('|', $category->getPath())));
+
+                $parentCategories = $this->categoryLoader->loadByIds($pathIds, $salesChannelContext);
+                foreach ($parentCategories as $parentCategory) {
+                    if ($parentCategory instanceof CategoryEntity) {
+                        $categoryData[] = [
+                            'catid'  => $parentCategory->getId(),
+                            'title'  => $parentCategory->getTranslation('name'),
+                            'shopid' => intval($salesChannelContext->getSalesChannelId()),
+                            'pos'    => 0,
+                            'path'   => '/' . $this->getSeoUrlPath($parentCategory->getSeoUrls(), $salesChannelContext->getLanguageId()),
+                        ];
+                    }
+                }
+            }
+
+            return $categoryData;
+        });
+
+        $mediaUrls = [];
+        $index     = 0;
+        if ($object->getMedia()) {
+            foreach ($object->getMedia() as $productMedia) {
+                if (($url = $productMedia->getMedia()?->getPath())) {
+                    $mediaUrls[$index++] = '/' . $url;
+                }
+            }
+        }
+
 
         $data = [
             'id'                  => $object->getId(),
@@ -66,7 +104,7 @@ class ProductNormalizer implements NormalizerInterface
             'meta_title'          => $object->getTranslation('metaTitle'),
             'meta_description'    => $object->getTranslation('metaDescription'),
             'attributeStr'        => $this->getGroupedOptions($object->getProperties(), $object->getOptions()),
-            'category'            => array_values($categories),
+            'category'            => array_values($categories)[0],
             'maincategory'        => $object->getCategories()->first()?->getId(),
             'width'               => $object->getWidth(),
             'height'              => $object->getHeight(),
@@ -88,7 +126,8 @@ class ProductNormalizer implements NormalizerInterface
             'unit'                => $object->getUnit()?->getShortCode(),
             'price'               => $object->getCalculatedPrice()->getUnitPrice(),
             'referencePrice'      => $object->getCalculatedPrice()->getReferencePrice()?->getPrice(),
-            'images'              => array_values($images),
+            'images'              => !empty($mediaUrls) ? $mediaUrls : [],
+            'picture_url_main'    => $object->getCover() ? ('/' . $object->getCover()->getMedia()?->getPath()) : null,
             'url'                 => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp'           => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
