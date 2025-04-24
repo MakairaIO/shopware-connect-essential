@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 .PHONY: ssh
 ssh:
-	docker exec -it shopware bash
+	docker exec -it shopware65 bash
 
 .PHONY: up
 up:
@@ -17,4 +17,4 @@ init:
 	mkdir -p ./src
 	make down
 	docker-compose up -d --build
-	docker cp shopware:/var/www/html/. ./src
+	docker cp shopware65:/var/www/html/. ./src

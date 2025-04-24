@@ -1,13 +1,12 @@
 services:
-
   shopware:
-    image: dockware/dev:latest
-    container_name: shopware
+    image: dockware/dev:6.5.8.16
+    container_name: shopware65
     volumes:
       - "./:/var/www/html/custom/plugins/MakairaConnectEssential"
       - "/var/www/html/custom/plugins"
-      - "db_volume:/var/lib/mysql"
-      - "shop_volume:/var/www/html"
+      - "db_volume65:/var/lib/mysql"
+      - "shop_volume65:/var/www/html"
     ports:
       - "80:80"
       - "3306:3306"
@@ -20,9 +19,9 @@ services:
       - XDEBUG_ENABLED=1
 
 volumes:
-  db_volume:
+  db_volume65:
     driver: local
-  shop_volume:
+  shop_volume65:
     driver: local
 
 networks:

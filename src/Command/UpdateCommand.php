@@ -45,7 +45,7 @@ class UpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io      = new SymfonyStyle($input, $output);
-        $context = Context::createCLIContext();
+        $context = Context::createDefaultContext();
 
         $salesChannelIds = $input->getArgument('salesChannelId') ? [$input->getArgument('salesChannelId')] : null;
 
