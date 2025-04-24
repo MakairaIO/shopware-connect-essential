@@ -1,4 +1,4 @@
-# Makaira Connect Essential ![Version](https://img.shields.io/github/v/tag/MakairaIO/shopware-connect-essential?color=blue) [![Packagist Version](https://img.shields.io/packagist/v/makaira/shopware6-connect-essential)](https://packagist.org/packages/makaira/shopware-connect-essential)
+# Makaira Connect Essential ![Version](https://img.shields.io/github/v/tag/MakairaIO/shopware6-connect-essential?color=blue) [![Packagist Version](https://img.shields.io/packagist/v/makaira/shopware6-connect-essential)](https://packagist.org/packages/makaira/shopware6-connect-essential)
 
 ## 🎯 Purpose
 
@@ -185,3 +185,16 @@ class ModifierQuerySubscriber implements EventSubscriberInterface
     }
 }
 ```
+
+---
+
+## 🛠️ Shopware Compatibility
+
+The **Makaira Connect Frontend** module is compatible with the following Shopware versions:
+
+| Shopware Version | Supported    |
+| ---------------- | ------------ |
+| 6.5              | ✅ Supported |
+| 6.6              | ✅ Supported |
+
+💡 **Note**: Ensure your Shopware installation matches one of the supported versions for optimal compatibility.
