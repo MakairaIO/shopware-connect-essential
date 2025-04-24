@@ -1,3 +1,9 @@
+## [1.1.5](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.4...1.1.5) (2025-04-24)
+
+### Bug Fixes
+
+* add compoatibility for shopware 6.5 ([1be00af](https://github.com/MakairaIO/shopware-connect-essential/commit/1be00afdbd8b85df36f9eeee669d6cc4fda5baa0))
+
 ## [1.1.4](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.3...1.1.4) (2025-04-23)
 
 ### Bug Fixes
