@@ -1,3 +1,9 @@
+## [1.1.6](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.5...1.1.6) (2025-04-28)
+
+### Bug Fixes
+
+* category assignment in productnormalizer ([b042757](https://github.com/MakairaIO/shopware-connect-essential/commit/b042757b048f1dc741c53d54341c272ae0ce930d))
+
 ## [1.1.5](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.4...1.1.5) (2025-04-24)
 
 ### Bug Fixes
