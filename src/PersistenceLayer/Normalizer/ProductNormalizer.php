@@ -104,7 +104,7 @@ class ProductNormalizer implements NormalizerInterface
             'meta_title'          => $object->getTranslation('metaTitle'),
             'meta_description'    => $object->getTranslation('metaDescription'),
             'attributeStr'        => $this->getGroupedOptions($object->getProperties(), $object->getOptions()),
-            'category'            => array_values($categories)[0],
+            'category'            => reset($categories),
             'maincategory'        => $object->getCategories()->first()?->getId(),
             'width'               => $object->getWidth(),
             'height'              => $object->getHeight(),
