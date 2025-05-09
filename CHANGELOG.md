@@ -1,3 +1,9 @@
+## [1.1.8](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.7...1.1.8) (2025-05-09)
+
+### Bug Fixes
+
+* add error code to the API exception ([3d60b95](https://github.com/MakairaIO/shopware-connect-essential/commit/3d60b95ef9f265d35c04765239c323b408dca6fc))
+
 ## [1.1.7](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.6...1.1.7) (2025-05-09)
 
 ### Bug Fixes
