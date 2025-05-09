@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.6...1.1.7) (2025-05-09)
+
+### Bug Fixes
+
+* add package author ([4272c62](https://github.com/MakairaIO/shopware-connect-essential/commit/4272c62ae72f1dd1eec7c8a207ef1411c2a0f059))
+* optimize category handling ([e5d0723](https://github.com/MakairaIO/shopware-connect-essential/commit/e5d072331f880520c3bbdb01b2b3560e958806da))
+
 ## [1.1.6](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.5...1.1.6) (2025-04-28)
 
 ### Bug Fixes
