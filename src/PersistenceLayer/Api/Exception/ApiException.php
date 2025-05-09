@@ -28,7 +28,11 @@ class ApiException extends \Exception
 
         $message = 'The API did return an error';
         if (isset($responseBody['message'])) {
+            // add the message to the message
             $message .= ': ' . $responseBody['message'];
+            if (isset($responseBody['errorId'])) {
+                $message .= ' (errorId: ' . $responseBody['errorId'] . ')';
+            }
         }
 
         return new self($message, 0, null, $response);
