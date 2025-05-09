@@ -5,6 +5,12 @@
   "version": "1.1.6",
   "license": "GPL-3.0",
   "homepage": "https://www.makaira.io",
+  "authors": [
+    {
+      "name": "Makaira GmbH",
+      "homepage": "https://www.makaira.io"
+    }
+  ],
   "keywords": [
     "shopware",
     "plugin",
