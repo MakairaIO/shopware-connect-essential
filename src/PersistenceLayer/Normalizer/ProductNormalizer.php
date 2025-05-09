@@ -86,6 +86,12 @@ class ProductNormalizer implements NormalizerInterface
             }
         }
 
+        if ($object->getCategories()->first()?->getId() === null) {
+            $this->logger->debug('[Makaira] Product has no categories', [
+                'product_id' => $object->getId(),
+                'ean'        => $object->getEan() ?? $object->getProductNumber() ?? '',
+            ]);
+        }
 
         $data = [
             'id'                  => $object->getId(),
@@ -104,8 +110,8 @@ class ProductNormalizer implements NormalizerInterface
             'meta_title'          => $object->getTranslation('metaTitle'),
             'meta_description'    => $object->getTranslation('metaDescription'),
             'attributeStr'        => $this->getGroupedOptions($object->getProperties(), $object->getOptions()),
-            'category'            => reset($categories),
-            'maincategory'        => $object->getCategories()->first()?->getId(),
+            'category'            => reset($categories) ?: [],
+            'maincategory'        => $object->getCategories()->first()?->getId() ?? '',
             'width'               => $object->getWidth(),
             'height'              => $object->getHeight(),
             'length'              => $object->getLength(),
