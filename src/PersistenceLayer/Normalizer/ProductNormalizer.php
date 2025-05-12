@@ -40,41 +40,47 @@ class ProductNormalizer implements NormalizerInterface
         /** @var SalesChannelContext $salesChannelContext */
         $salesChannelContext = $context['salesChannelContext'];
 
-        $categories = $object->getCategories()->map(function (CategoryEntity $category) use ($salesChannelContext): array {
-            // use the category loader to load the category
+        $categoryDataById = [];
+
+        foreach ($object->getCategories() as $category) {
+            // Load the category
             $category = $this->categoryLoader->loadByIds([$category->getId()], $salesChannelContext)->first();
             if (! $category instanceof CategoryEntity) {
-                return [];
+                continue;
             }
-            $categoryData[] = [
-                'catid'  => $category->getId(),
-                'title'  => $category->getName(),
-                'shopid' => intval($salesChannelContext->getSalesChannelId()),
-                'pos'    => 0,
-                'path'   => '/' . $this->getSeoUrlPath($category->getSeoUrls(), $salesChannelContext->getLanguageId()),
-            ];
-
-            // Process the path to include all categories in the path
+            // Add the main category
+            $catid = $category->getId();
+            if (!isset($categoryDataById[$catid])) {
+                $categoryDataById[$catid] = [
+                    'catid'  => $catid,
+                    'title'  => $category->getName(),
+                    'shopid' => intval($salesChannelContext->getSalesChannelId()),
+                    'pos'    => 0,
+                    'path'   => '/' . $this->getSeoUrlPath($category->getSeoUrls(), $salesChannelContext->getLanguageId()),
+                ];
+            }
+            // Add parent categories from path
             if ($category->getPath()) {
-                $this->logger->info('Category path: ', ['path' => $category->getPath()]);
-                $pathIds = array_values(array_filter(explode('|', $category->getPath())));
-
+                $pathIds          = array_values(array_filter(explode('|', $category->getPath())));
                 $parentCategories = $this->categoryLoader->loadByIds($pathIds, $salesChannelContext);
                 foreach ($parentCategories as $parentCategory) {
                     if ($parentCategory instanceof CategoryEntity) {
-                        $categoryData[] = [
-                            'catid'  => $parentCategory->getId(),
-                            'title'  => $parentCategory->getTranslation('name'),
-                            'shopid' => intval($salesChannelContext->getSalesChannelId()),
-                            'pos'    => 0,
-                            'path'   => '/' . $this->getSeoUrlPath($parentCategory->getSeoUrls(), $salesChannelContext->getLanguageId()),
-                        ];
+                        $parentCatid = $parentCategory->getId();
+                        if (!isset($categoryDataById[$parentCatid])) {
+                            $categoryDataById[$parentCatid] = [
+                                'catid'  => $parentCatid,
+                                'title'  => $parentCategory->getTranslation('name'),
+                                'shopid' => intval($salesChannelContext->getSalesChannelId()),
+                                'pos'    => 0,
+                                'path'   => '/' . $this->getSeoUrlPath($parentCategory->getSeoUrls(), $salesChannelContext->getLanguageId()),
+                            ];
+                        }
                     }
                 }
             }
+        }
 
-            return $categoryData;
-        });
+        $mergedArray = array_values($categoryDataById);
 
         $mediaUrls = [];
         $index     = 0;
@@ -84,13 +90,6 @@ class ProductNormalizer implements NormalizerInterface
                     $mediaUrls[$index++] = '/' . $url;
                 }
             }
-        }
-
-        if ($object->getCategories()->first()?->getId() === null) {
-            $this->logger->debug('[Makaira] Product has no categories', [
-                'product_id' => $object->getId(),
-                'ean'        => $object->getEan() ?? $object->getProductNumber() ?? '',
-            ]);
         }
 
         $data = [
@@ -110,7 +109,7 @@ class ProductNormalizer implements NormalizerInterface
             'meta_title'          => $object->getTranslation('metaTitle'),
             'meta_description'    => $object->getTranslation('metaDescription'),
             'attributeStr'        => $this->getGroupedOptions($object->getProperties(), $object->getOptions()),
-            'category'            => reset($categories) ?: [],
+            'category'            => $mergedArray,
             'maincategory'        => $object->getCategories()->first()?->getId() ?? '',
             'width'               => $object->getWidth(),
             'height'              => $object->getHeight(),
