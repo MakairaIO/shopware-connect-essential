@@ -1,3 +1,9 @@
+## [1.1.9](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.8...1.1.9) (2025-05-12)
+
+### Bug Fixes
+
+* assign all categories for a product ([675e1a4](https://github.com/MakairaIO/shopware-connect-essential/commit/675e1a4a699b20769169f6830dee330a728c59d8))
+
 ## [1.1.8](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.7...1.1.8) (2025-05-09)
 
 ### Bug Fixes
