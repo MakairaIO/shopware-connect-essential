@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/MakairaIO/shopware-connect-essential/compare/1.2.0...1.2.1) (2025-05-21)
+
+### Bug Fixes
+
+* add purchase price, list price, and regulation price to product normalization ([dc2b4dd](https://github.com/MakairaIO/shopware-connect-essential/commit/dc2b4dd5f1b87bc42161902c09d6c0b9d3c65457))
+
 ## [1.2.0](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.9...1.2.0) (2025-05-21)
 
 ### Features
