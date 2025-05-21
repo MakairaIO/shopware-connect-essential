@@ -73,9 +73,15 @@ The following configuration options are available for the **Makaira Connect Esse
    - **Description**: The instance name for Makaira (e.g., `live`). This value must be set per sales channel.
 
 5. **API Timeout**:
+
    - **Key**: `apiTimeout`
    - **Description**: The timeout for API requests in seconds.
    - **Default Value**: `30`
+
+6. **Custom Fields Ignore List**:
+   - **Key**: `customFieldsIgnoreList`
+   - **Description**: A list of custom field keys that should be ignored during synchronization with Makaira.
+   - **Default Value**: `[]`
 
 ### How to Configure
 
@@ -87,6 +93,7 @@ The following configuration options are available for the **Makaira Connect Esse
    - **Makaira Customer**
    - **Makaira Instance**
    - **API Timeout**
+   - **Custom Fields Ignore List**
 4. Save the configuration.
 
 💡 **Note**: Ensure that the `Makaira Shared Secret` and `Makaira Instance` values are set individually for each sales channel to enable proper synchronization.

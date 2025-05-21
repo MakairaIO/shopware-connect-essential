@@ -9,11 +9,12 @@ use Shopware\Core\System\SystemConfig\SystemConfigService;
 
 class PluginConfig
 {
-    public const MAKAIRA_BASE_URL      = 'makairaBaseUrl';
-    public const MAKAIRA_SHARED_SECRET = 'makairaSharedSecret';
-    public const MAKAIRA_CUSTOMER      = 'makairaCustomer';
-    public const MAKAIRA_INSTANCE      = 'makairaInstance';
-    public const API_TIMEOUT           = 'apiTimeout';
+    public const MAKAIRA_BASE_URL          = 'makairaBaseUrl';
+    public const MAKAIRA_SHARED_SECRET     = 'makairaSharedSecret';
+    public const MAKAIRA_CUSTOMER          = 'makairaCustomer';
+    public const MAKAIRA_INSTANCE          = 'makairaInstance';
+    public const API_TIMEOUT               = 'apiTimeout';
+    public const CUSTOM_FIELDS_IGNORE_LIST = 'customFieldsIgnoreList';
 
     public const KEY_PREFIX = 'MakairaConnectEssential.config.';
 
@@ -47,5 +48,14 @@ class PluginConfig
             $this->get(self::MAKAIRA_INSTANCE, $salesChannelId),
             $this->get(self::API_TIMEOUT, $salesChannelId)
         );
+    }
+
+    public function getCustomFieldsIgnoreList(?string $salesChannelId = null): array
+    {
+        $ignoreList = $this->get(self::CUSTOM_FIELDS_IGNORE_LIST, $salesChannelId);
+        if (empty($ignoreList)) {
+            return [];
+        }
+        return array_map('trim', explode(',', $ignoreList));
     }
 }

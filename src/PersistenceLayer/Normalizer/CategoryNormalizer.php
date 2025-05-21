@@ -8,6 +8,7 @@ use MakairaConnectEssential\Events\ModifierQueryRequestEvent;
 use MakairaConnectEssential\Loader\CategoryLoader;
 use MakairaConnectEssential\PersistenceLayer\Traits\CustomFieldsTrait;
 use MakairaConnectEssential\PersistenceLayer\Traits\UrlTrait;
+use MakairaConnectEssential\Utils\PluginConfig;
 use Shopware\Core\Content\Category\CategoryEntity;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -20,8 +21,10 @@ class CategoryNormalizer implements NormalizerInterface
 
     public function __construct(
         protected CategoryLoader $categoryLoader,
-        private EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher,
+        PluginConfig $pluginConfig
     ) {
+        $this->setPluginConfig($pluginConfig);
     }
 
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
@@ -46,7 +49,7 @@ class CategoryNormalizer implements NormalizerInterface
             'metaTitle'        => $object->getTranslation('metaTitle'),
             'metaDescription'  => $object->getTranslation('metaDescription'),
             'keywords'         => $object->getTranslation('keywords'),
-            'customFields'     => $this->processCustomFields($object->getCustomFields()),
+            'customFields'     => $this->processCustomFields($object->getCustomFields(), $salesChannelContext),
             'active'           => $object->getActive(),
             'hidden'           => !$object->getVisible(),
             'images'           => $object->getMedia() ? ['/' . $object->getMedia()->getPath()] : null,

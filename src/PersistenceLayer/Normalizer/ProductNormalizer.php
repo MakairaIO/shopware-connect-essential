@@ -8,6 +8,7 @@ use MakairaConnectEssential\Events\ModifierQueryRequestEvent;
 use MakairaConnectEssential\Loader\CategoryLoader;
 use MakairaConnectEssential\PersistenceLayer\Traits\CustomFieldsTrait;
 use MakairaConnectEssential\PersistenceLayer\Traits\UrlTrait;
+use MakairaConnectEssential\Utils\PluginConfig;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Category\CategoryEntity;
 use Shopware\Core\Content\Product\Aggregate\ProductSearchKeyword\ProductSearchKeywordEntity;
@@ -27,8 +28,10 @@ class ProductNormalizer implements NormalizerInterface
     public function __construct(
         private EventDispatcherInterface $eventDispatcher,
         private LoggerInterface $logger,
-        private CategoryLoader $categoryLoader
+        private CategoryLoader $categoryLoader,
+        PluginConfig $pluginConfig
     ) {
+        $this->setPluginConfig($pluginConfig);
     }
 
     public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
@@ -123,7 +126,7 @@ class ProductNormalizer implements NormalizerInterface
             'manufacturer_title'  => $object->getManufacturer()?->getName(),
             'ratingAverage'       => $object->getRatingAverage(),
             'totalProductReviews' => $object->getProductReviews()->count(),
-            'customFields'        => $this->processCustomFields($object->getCustomFields()),
+            'customFields'        => $this->processCustomFields($object->getCustomFields(), $salesChannelContext),
             'topseller'           => $object->getMarkAsTopseller(),
             'searchable'          => true,
             'searchkeys'          => $this->getSearchKeys($object),

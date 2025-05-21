@@ -74,14 +74,17 @@
         <service id="MakairaConnectEssential\PersistenceLayer\Normalizer\CategoryNormalizer">
             <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader" />
             <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig" />
         </service>
         <service id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductManufacturerNormalizer">
             <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig" />
         </service>
         <service id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer">
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="monolog.logger.makaira_essential" />
             <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader" />
+            <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig" />
         </service>
 
         <!-- Persistence Layer -->
