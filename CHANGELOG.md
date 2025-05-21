@@ -1,3 +1,9 @@
+## [1.2.2](https://github.com/MakairaIO/shopware-connect-essential/compare/1.2.1...1.2.2) (2025-05-21)
+
+### Bug Fixes
+
+* ensure prices default to zero if not set in product normalization ([3d129c6](https://github.com/MakairaIO/shopware-connect-essential/commit/3d129c6ea7c28e76f990e5632ae3eddd56b32113))
+
 ## [1.2.1](https://github.com/MakairaIO/shopware-connect-essential/compare/1.2.0...1.2.1) (2025-05-21)
 
 ### Bug Fixes
