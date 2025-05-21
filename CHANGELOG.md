@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.9...1.2.0) (2025-05-21)
+
+### Features
+
+* add custom fields ignore list configuration and update processing logic ([ced8d87](https://github.com/MakairaIO/shopware-connect-essential/commit/ced8d8788f1f9c88e2d678de4273046884260b0c))
+
 ## [1.1.9](https://github.com/MakairaIO/shopware-connect-essential/compare/1.1.8...1.1.9) (2025-05-12)
 
 ### Bug Fixes
