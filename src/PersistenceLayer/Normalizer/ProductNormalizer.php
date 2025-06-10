@@ -57,7 +57,7 @@ class ProductNormalizer implements NormalizerInterface
                 $categoryDataById[$catid] = [
                     'catid'  => $catid,
                     'title'  => $category->getName(),
-                    'shopid' => intval($salesChannelContext->getSalesChannelId()),
+                    'shopid' => 1,
                     'pos'    => 0,
                     'path'   => '/' . $this->getSeoUrlPath($category->getSeoUrls(), $salesChannelContext->getLanguageId()),
                 ];
