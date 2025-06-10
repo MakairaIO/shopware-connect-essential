@@ -73,7 +73,7 @@ class ProductNormalizer implements NormalizerInterface
                             $categoryDataById[$parentCatid] = [
                                 'catid'  => $parentCatid,
                                 'title'  => $parentCategory->getTranslation('name'),
-                                'shopid' => intval($salesChannelContext->getSalesChannelId()),
+                                'shopid' => 1,
                                 'pos'    => 0,
                                 'path'   => '/' . $this->getSeoUrlPath($parentCategory->getSeoUrls(), $salesChannelContext->getLanguageId()),
                             ];
@@ -100,7 +100,7 @@ class ProductNormalizer implements NormalizerInterface
             'type'                => $object->getParentId() !== null ? 'variant' : 'product',
             'parent'              => $object->getParentId() ?? '',
             'isVariant'           => null !== $object->getParentId(),
-            'shop'                => 1, // use legacy shop ID for compatibility
+            'shop'                => [1], // use legacy shop ID for compatibility
             'ean'                 => $object->getEan() ?? $object->getProductNumber() ?? '',
             'active'              => (bool) $object->getActive(),
             'stock'               => $object->getAvailableStock(),
