@@ -39,7 +39,7 @@ class CategoryNormalizer implements NormalizerInterface
         $data = [
             'id'               => $object->getId(),
             'type'             => 'category',
-            'shop'             => intval($salesChannelContext->getSalesChannelId()),
+            'shop'             => 1, // use legacy shop ID for compatibility
             'category_title'   => $object->getTranslation('name'),
             'level'            => $object->getLevel(),
             'parent'           => $object->getParentId() ?? '',

@@ -100,7 +100,7 @@ class ProductNormalizer implements NormalizerInterface
             'type'                => $object->getParentId() !== null ? 'variant' : 'product',
             'parent'              => $object->getParentId() ?? '',
             'isVariant'           => null !== $object->getParentId(),
-            'shop'                => intval($salesChannelContext->getSalesChannelId()),
+            'shop'                => 1, // use legacy shop ID for compatibility
             'ean'                 => $object->getEan() ?? $object->getProductNumber() ?? '',
             'active'              => (bool) $object->getActive(),
             'stock'               => $object->getAvailableStock(),
@@ -145,7 +145,11 @@ class ProductNormalizer implements NormalizerInterface
 
         // Dispatch the ModifierQueryRequestEvent for products
         $event = new ModifierQueryRequestEvent($data);
-        $this->eventDispatcher->dispatch($event, ModifierQueryRequestEvent::NAME_PRODUCT);
+        if ($object->getParentId() !== null) {
+            $this->eventDispatcher->dispatch($event, ModifierQueryRequestEvent::NAME_VARIANT);
+        } else {
+            $this->eventDispatcher->dispatch($event, ModifierQueryRequestEvent::NAME_PRODUCT);
+        }
 
         // Return the potentially modified data
         return $event->getQuery()->getArrayCopy();
@@ -153,7 +157,7 @@ class ProductNormalizer implements NormalizerInterface
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof ProductEntity && $format === 'json';
+        return ($data instanceof ProductEntity || $data instanceof SalesChannelProductEntity) && $format === 'json';
     }
 
     public function getSupportedTypes(?string $format): array
