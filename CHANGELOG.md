@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/MakairaIO/shopware-connect-essential/compare/1.2.2...1.3.0) (2025-06-10)
+
+### Features
+
+* use default shop IDs ([137a99a](https://github.com/MakairaIO/shopware-connect-essential/commit/137a99afded740ba84f3a0d7d08c90bae55f8c3f))
+
 ## [1.2.2](https://github.com/MakairaIO/shopware-connect-essential/compare/1.2.1...1.2.2) (2025-05-21)
 
 ### Bug Fixes
