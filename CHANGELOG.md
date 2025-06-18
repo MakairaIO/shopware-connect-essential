@@ -1,3 +1,9 @@
+## [1.3.3](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.2...1.3.3) (2025-06-18)
+
+### Bug Fixes
+
+* use ean and productnumber as eans ([08b8311](https://github.com/MakairaIO/shopware-connect-essential/commit/08b831135e53a8b7622ee97ce4d18b1319f00a8b))
+
 ## [1.3.2](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.1...1.3.2) (2025-06-10)
 
 ### Bug Fixes
