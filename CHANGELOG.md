@@ -1,3 +1,9 @@
+## [1.3.4](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.3...1.3.4) (2025-06-20)
+
+### Bug Fixes
+
+* ensure ean values are indexed correctly in product normalizer ([95d05ae](https://github.com/MakairaIO/shopware-connect-essential/commit/95d05ae6b18a2a9a06fddc033a0ce7c80f20ff44))
+
 ## [1.3.3](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.2...1.3.3) (2025-06-18)
 
 ### Bug Fixes
