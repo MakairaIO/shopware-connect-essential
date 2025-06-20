@@ -101,7 +101,7 @@ class ProductNormalizer implements NormalizerInterface
             'parent'              => $object->getParentId() ?? '',
             'isVariant'           => null !== $object->getParentId(),
             'shop'                => [1], // use legacy shop ID for compatibility
-            'ean'                 => array_filter([$object->getEan(), $object->getProductNumber()]),
+            'ean'                 => array_values(array_filter([$object->getEan(), $object->getProductNumber()])),
             'active'              => (bool) $object->getActive(),
             'stock'               => $object->getAvailableStock(),
             'onstock'             => 0 < $object->getAvailableStock(),
