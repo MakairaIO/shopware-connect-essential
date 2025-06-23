@@ -24,7 +24,7 @@ To install the **Makaira Connect Essential** module in your Shopware 6 environme
 
    - Run the following command to require the plugin using Composer:
      ```bash
-     composer require makaira/shopware-connect-essential
+     composer require makaira/shopware6-connect-essential
      ```
 
 2. **Activate the Plugin**:
