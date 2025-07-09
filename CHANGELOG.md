@@ -1,3 +1,10 @@
+## [1.3.5](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.4...1.3.5) (2025-07-09)
+
+### Bug Fixes
+
+* add thumbnail urls ([8db11e2](https://github.com/MakairaIO/shopware-connect-essential/commit/8db11e2dd1f113b037036195807658f09a0e32d1))
+* add timestamp to payload ([4cce14f](https://github.com/MakairaIO/shopware-connect-essential/commit/4cce14f5a03d71af1ad7343ddae36dde37d88a9a))
+
 ## [1.3.4](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.3...1.3.4) (2025-06-20)
 
 ### Bug Fixes
