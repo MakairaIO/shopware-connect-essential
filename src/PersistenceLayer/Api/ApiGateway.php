@@ -99,7 +99,8 @@ final readonly class ApiGateway implements ApiGatewayInterface
     public function deletePersistenceRevisions(array $items, string $language): void
     {
         $response = $this->apiClient->request('PUT', '/persistence/revisions', null, [
-            'items' => array_map(fn (array $data): array => [
+            'import_timestamp' => $this->clock->now()->format('Y-m-d H:i:s'),
+            'items'            => array_map(fn (array $data): array => [
                 'language_id' => $language,
                 'delete'      => true,
                 'data'        => $data,
