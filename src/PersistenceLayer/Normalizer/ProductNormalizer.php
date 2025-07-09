@@ -85,12 +85,23 @@ class ProductNormalizer implements NormalizerInterface
 
         $mergedArray = array_values($categoryDataById);
 
-        $mediaUrls = [];
-        $index     = 0;
+        $mediaUrls     = [];
+        $thumbnailData = [];
+        $index         = 0;
         if ($object->getMedia()) {
             foreach ($object->getMedia() as $productMedia) {
-                if (($url = $productMedia->getMedia()?->getPath())) {
-                    $mediaUrls[$index++] = '/' . $url;
+                if (($media = $productMedia->getMedia())) {
+                    if ($url = $media->getPath()) {
+                        $mediaUrls[$index] = '/' . $url;
+
+                        // Add thumbnails for this media
+                        foreach ($media->getThumbnails() ?? [] as $thumbnail) {
+                            $key                 = $thumbnail->getWidth() . 'x' . $thumbnail->getHeight();
+                            $thumbnailData[$key] = '/' . $thumbnail->getPath();
+                        }
+
+                        $index++;
+                    }
                 }
             }
         }
@@ -141,6 +152,7 @@ class ProductNormalizer implements NormalizerInterface
             'picture_url_main'    => $object->getCover() ? ('/' . $object->getCover()->getMedia()?->getPath()) : null,
             'url'                 => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp'           => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
+            'thumbnails'          => $thumbnailData,
         ];
 
         // Dispatch the ModifierQueryRequestEvent for products
