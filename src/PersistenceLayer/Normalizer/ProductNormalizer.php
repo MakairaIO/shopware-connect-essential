@@ -91,13 +91,17 @@ class ProductNormalizer implements NormalizerInterface
         if ($object->getMedia()) {
             foreach ($object->getMedia() as $productMedia) {
                 if (($media = $productMedia->getMedia())) {
-                    if ($url = $media->getPath()) {
-                        $mediaUrls[$index] = '/' . $url;
+                    if ($url = $media->getUrl()) {
+                        $mediaUrls[$index] = $url;
 
                         // Add thumbnails for this media
+                        $mediaThumbnails = [];
                         foreach ($media->getThumbnails() ?? [] as $thumbnail) {
-                            $key                 = $thumbnail->getWidth() . 'x' . $thumbnail->getHeight();
-                            $thumbnailData[$key] = '/' . $thumbnail->getPath();
+                            $key                   = $thumbnail->getWidth() . 'x' . $thumbnail->getHeight();
+                            $mediaThumbnails[$key] = $thumbnail->getUrl();
+                        }
+                        if (!empty($mediaThumbnails)) {
+                            $thumbnailData[$index] = $mediaThumbnails;
                         }
 
                         $index++;
@@ -149,7 +153,7 @@ class ProductNormalizer implements NormalizerInterface
             'listPrice'           => $object->getCalculatedPrice()->getListPrice()?->getPrice()       ?? 0,
             'regulationPrice'     => $object->getCalculatedPrice()->getRegulationPrice()?->getPrice() ?? 0,
             'images'              => !empty($mediaUrls) ? $mediaUrls : [],
-            'picture_url_main'    => $object->getCover() ? ('/' . $object->getCover()->getMedia()?->getPath()) : null,
+            'picture_url_main'    => $object->getCover() ? ($object->getCover()->getMedia()?->getUrl()) : null,
             'url'                 => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp'           => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
             'thumbnails'          => $thumbnailData,
