@@ -1,3 +1,10 @@
+## [1.3.6](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.5...1.3.6) (2025-07-10)
+
+### Bug Fixes
+
+* add error information if set ([b51add8](https://github.com/MakairaIO/shopware-connect-essential/commit/b51add8e2edc309ec1dc95f8a7f5656f4d990add))
+* use absolute image urls ([274cf70](https://github.com/MakairaIO/shopware-connect-essential/commit/274cf70a06f7e7f34487d2a8b30003242b223174))
+
 ## [1.3.5](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.4...1.3.5) (2025-07-09)
 
 ### Bug Fixes
