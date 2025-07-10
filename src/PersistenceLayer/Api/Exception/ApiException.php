@@ -33,6 +33,9 @@ class ApiException extends \Exception
             if (isset($responseBody['errorId'])) {
                 $message .= ' (errorId: ' . $responseBody['errorId'] . ')';
             }
+            if (isset($responseBody['errors'])) {
+                $message .= ' (errors: ' . json_encode($responseBody['errors']) . ')';
+            }
         }
 
         return new self($message, 0, null, $response);
