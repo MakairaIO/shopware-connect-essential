@@ -1,3 +1,9 @@
+## [1.3.7](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.6...1.3.7) (2025-07-11)
+
+### Bug Fixes
+
+* export self links to makaira ([a55ad79](https://github.com/MakairaIO/shopware-connect-essential/commit/a55ad799378462d68fe92c8288b9d9758b03ab9e))
+
 ## [1.3.6](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.5...1.3.6) (2025-07-10)
 
 ### Bug Fixes
