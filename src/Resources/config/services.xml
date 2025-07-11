@@ -84,6 +84,7 @@
             <argument type="service" id="event_dispatcher" />
             <argument type="service" id="monolog.logger.makaira_essential" />
             <argument type="service" id="MakairaConnectEssential\Loader\CategoryLoader" />
+            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader" />
             <argument type="service" id="MakairaConnectEssential\Utils\PluginConfig" />
         </service>
 

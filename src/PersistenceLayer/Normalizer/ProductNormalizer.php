@@ -6,6 +6,7 @@ namespace MakairaConnectEssential\PersistenceLayer\Normalizer;
 
 use MakairaConnectEssential\Events\ModifierQueryRequestEvent;
 use MakairaConnectEssential\Loader\CategoryLoader;
+use MakairaConnectEssential\Loader\SalesChannelLoader;
 use MakairaConnectEssential\PersistenceLayer\Traits\CustomFieldsTrait;
 use MakairaConnectEssential\PersistenceLayer\Traits\UrlTrait;
 use MakairaConnectEssential\Utils\PluginConfig;
@@ -29,6 +30,7 @@ class ProductNormalizer implements NormalizerInterface
         private EventDispatcherInterface $eventDispatcher,
         private LoggerInterface $logger,
         private CategoryLoader $categoryLoader,
+        private SalesChannelLoader $salesChannelLoader,
         PluginConfig $pluginConfig
     ) {
         $this->setPluginConfig($pluginConfig);
@@ -157,6 +159,7 @@ class ProductNormalizer implements NormalizerInterface
             'url'                 => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp'           => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
             'thumbnails'          => $thumbnailData,
+            'selfLinks'           => $this->generateSelfLinks($object, $salesChannelContext),
         ];
 
         // Dispatch the ModifierQueryRequestEvent for products
@@ -224,5 +227,57 @@ class ProductNormalizer implements NormalizerInterface
         }
 
         return [] !== $searchKeys ? implode(' ', $searchKeys) : null;
+    }
+
+    private function generateSelfLinks(SalesChannelProductEntity $product, SalesChannelContext $salesChannelContext): array
+    {
+        $selfLinks = [];
+
+        try {
+            // Get all languages for the current sales channel
+            $languages = $this->salesChannelLoader->getLanguages(
+                $salesChannelContext->getContext(),
+                $salesChannelContext->getSalesChannelId()
+            );
+
+            foreach ($languages as $language) {
+                // Get the locale code (e.g., 'en-GB', 'de-DE')
+                $localeCode = $language->getLocale()->getCode();
+                // Extract the language part (e.g., 'en', 'de')
+                $languageCode = substr($localeCode, 0, 2);
+
+                // Find SEO URLs for this specific language
+                $seoUrls = $product->getSeoUrls();
+                if ($seoUrls) {
+                    $languageSeoUrls = $seoUrls->filterByProperty('languageId', $language->getId());
+                    if ($languageSeoUrls->count() > 0) {
+                        $seoPath = $this->getSeoUrlPath($languageSeoUrls, $language->getId());
+                        if (!empty($seoPath)) {
+                            $selfLinks[$languageCode] = '/' . $seoPath;
+                        }
+                    }
+                }
+
+                // If no SEO URL found, fall back to a basic pattern
+                if (!isset($selfLinks[$languageCode])) {
+                    $selfLinks[$languageCode] = '/' . $languageCode . '/product/' . $product->getProductNumber();
+                }
+            }
+        } catch (\Exception $e) {
+            // Log error but continue with at least the current language
+            $this->logger->warning('Error generating self links for product', [
+                'productId' => $product->getId(),
+                'error'     => $e->getMessage(),
+            ]);
+
+            // Fallback to current language only
+            $currentLanguageId = $salesChannelContext->getLanguageId();
+            $seoPath           = $this->getSeoUrlPath($product->getSeoUrls(), $currentLanguageId);
+            if (!empty($seoPath)) {
+                $selfLinks['en'] = '/' . $seoPath; // Default to 'en' if we can't determine the language
+            }
+        }
+
+        return $selfLinks;
     }
 }
