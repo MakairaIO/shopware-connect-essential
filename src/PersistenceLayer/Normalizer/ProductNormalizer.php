@@ -91,6 +91,9 @@ class ProductNormalizer implements NormalizerInterface
         $thumbnailData = [];
         $index         = 0;
         if ($object->getMedia()) {
+            // sort media by position
+            $object->getMedia()->sort(static fn (ProductMediaEntity $a, ProductMediaEntity $b) => $a->getPosition() - $b->getPosition());
+            
             foreach ($object->getMedia() as $productMedia) {
                 if (($media = $productMedia->getMedia())) {
                     if ($url = $media->getUrl()) {
