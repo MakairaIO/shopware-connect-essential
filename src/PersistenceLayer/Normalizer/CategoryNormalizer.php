@@ -52,7 +52,7 @@ class CategoryNormalizer implements NormalizerInterface
             'customFields'     => $this->processCustomFields($object->getCustomFields(), $salesChannelContext),
             'active'           => $object->getActive(),
             'hidden'           => !$object->getVisible(),
-            'images'           => $object->getMedia() ? ['/' . $object->getMedia()->getPath()] : null,
+            'images'           => $object->getMedia() ? ['/' . $object->getMedia()->getUrl()] : null,
             'url'              => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp'        => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
         ];
