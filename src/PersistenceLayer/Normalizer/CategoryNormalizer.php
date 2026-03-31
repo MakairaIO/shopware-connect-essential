@@ -51,7 +51,7 @@ class CategoryNormalizer implements NormalizerInterface
             'keywords'         => $object->getTranslation('keywords'),
             'customFields'     => $this->processCustomFields($object->getCustomFields(), $salesChannelContext),
             'active'           => $object->getActive(),
-            'hidden'           => !$object->getVisible(),
+            'hidden'           => !$object->getVisible() || $object->getType() === 'link',
             'images'           => $object->getMedia() ? ['/' . $object->getMedia()->getPath()] : null,
             'url'              => '/' . $this->getSeoUrlPath($object->getSeoUrls(), $salesChannelContext->getLanguageId()),
             'timestamp'        => ($object->getUpdatedAt() ?? $object->getCreatedAt())->format('Y-m-d H:i:s'),
