@@ -1,3 +1,9 @@
+## [1.3.8](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.7...1.3.8) (2026-03-31)
+
+### Bug Fixes
+
+* hide external link categories from Makaira search results ([#6](https://github.com/MakairaIO/shopware-connect-essential/issues/6)) ([06edf18](https://github.com/MakairaIO/shopware-connect-essential/commit/06edf189a0f5d903077e0e23133b3c5521f8afa1))
+
 ## [1.3.7](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.6...1.3.7) (2025-07-11)
 
 ### Bug Fixes
