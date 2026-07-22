@@ -2,7 +2,7 @@
 <container
   xmlns="http://symfony.com/schema/dic/services"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd"
+  xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd"
 >
     <services>
         <!-- Commands -->
@@ -52,7 +52,7 @@
             <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader" />
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory" />
             <argument type="service" id="MakairaConnectEssential\Loader\ProductLoader" />
-            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer" />                                                        
+            <argument type="service" id="MakairaConnectEssential\PersistenceLayer\Normalizer\ProductNormalizer" />
             <argument type="service" id="monolog.logger.makaira_essential" />
         </service>
 
@@ -124,7 +124,6 @@
         <!-- Utils -->
         <service id="MakairaConnectEssential\Utils\PluginConfig" public="true">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService" />
-            <argument type="service" id="MakairaConnectEssential\Loader\SalesChannelLoader" />
         </service>
 
     </services>
