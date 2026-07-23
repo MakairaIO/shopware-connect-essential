@@ -1,3 +1,9 @@
+## [1.4.0](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.8...1.4.0) (2026-07-23)
+
+### Features
+
+* **Version:** Add compatibility for sw 6.7 ([#8](https://github.com/MakairaIO/shopware-connect-essential/issues/8)) ([fde5517](https://github.com/MakairaIO/shopware-connect-essential/commit/fde5517f135c528e0577cf9eb426cd7ac3e19c4f))
+
 ## [1.3.8](https://github.com/MakairaIO/shopware-connect-essential/compare/1.3.7...1.3.8) (2026-03-31)
 
 ### Bug Fixes
