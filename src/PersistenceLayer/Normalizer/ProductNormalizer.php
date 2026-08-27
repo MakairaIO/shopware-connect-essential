@@ -12,6 +12,7 @@ use MakairaConnectEssential\PersistenceLayer\Traits\UrlTrait;
 use MakairaConnectEssential\Utils\PluginConfig;
 use Psr\Log\LoggerInterface;
 use Shopware\Core\Content\Category\CategoryEntity;
+use Shopware\Core\Content\Product\Aggregate\ProductMedia\ProductMediaEntity;
 use Shopware\Core\Content\Product\Aggregate\ProductSearchKeyword\ProductSearchKeywordEntity;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Content\Product\SalesChannel\SalesChannelProductEntity;
@@ -91,6 +92,9 @@ class ProductNormalizer implements NormalizerInterface
         $thumbnailData = [];
         $index         = 0;
         if ($object->getMedia()) {
+            // sort media by position
+            $object->getMedia()->sort(static fn (ProductMediaEntity $a, ProductMediaEntity $b) => $a->getPosition() - $b->getPosition());
+            
             foreach ($object->getMedia() as $productMedia) {
                 if (($media = $productMedia->getMedia())) {
                     if ($url = $media->getUrl()) {
